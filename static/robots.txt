@@ -1,0 +1,3 @@
+User-agent: *
+Disallow: /nobot/
+Sitemap: https://vicfree.com/sitemap.xml
