@@ -1,4 +1,4 @@
-name: Deploy Hugo Site to Github Pages on Master Branch
+name: github pages
 
 on:
   push:
@@ -6,12 +6,12 @@ on:
       - master
 
 jobs:
-  build-deploy:
+  deploy:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v1  # v2 does not have submodules option now
         with:
-          submodules: true
+           submodules: true
 
       - name: Setup Hugo
         uses: peaceiris/actions-hugo@v2
@@ -25,10 +25,7 @@ jobs:
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
-          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-          external_repository: victordou/victordou.github.io
-          publish_dir: "./public"
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
           cname: vicfree.com
-          keep_files: false # remove existing files
-          publish_branch: master  # deploying branch
           commit_message: ${{ github.event.head_commit.message }}
