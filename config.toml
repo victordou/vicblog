@@ -1,5 +1,5 @@
 baseURL = "https://vicfree.com"
-languageCode = "en-us"
+languageCode = "zh-hans"
 defaultContentLanguage = "en"
 title = "Victor"
 theme = "hermit"
@@ -32,13 +32,13 @@ disqusShortname = "vicfree"
   dateformNumTime = "2006-01-02 15:04 -0700"
 
   # Metadata mostly used in document's head
-  # description = ""
+  description = "Victor's Blog/维克多的博客"
   # images = [""]
   themeColor = "#494f5c"
 
   homeSubtitle = "Not a Blog, Nothing Here."
   footerCopyright = ' &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
-  # bgImg = ""  # Homepage background-image URL
+  bgImg = "nobot/bg.jpg"  # Homepage background-image URL
 
   # Prefix of link to the git commit detail page. GitInfo must be enabled.
   # gitUrl = "https://github.com/username/repository/commit/"

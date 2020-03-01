@@ -1,6 +1,6 @@
 {
-    "name": "Victor's Blog",
-    "short_name": "Victor",
+    "name": "Victor's Blog/维克多的博客",
+    "short_name": "Victor/维克多的博客",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
@@ -15,5 +15,6 @@
     ],
     "theme_color": "#494f5c",
     "background_color": "#494f5c",
+    "start_url": "/",
     "display": "standalone"
 }
