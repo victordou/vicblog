@@ -1,4 +1,67 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Victor</title><link>https://vicfree.com/posts/</link><description>Recent content in Posts on Victor</description><generator>Hugo -- gohugo.io</generator><language>zh-hans</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Sat, 29 Feb 2020 23:50:47 +0800</lastBuildDate><atom:link href="https://vicfree.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>我喜欢的PS4游戏</title><link>https://vicfree.com/2020/02/my-favourite-ps4-games/</link><pubDate>Sat, 29 Feb 2020 23:50:47 +0800</pubDate><guid>https://vicfree.com/2020/02/my-favourite-ps4-games/</guid><description>PS4时代就要结束了，主机大约每隔6年左右就会换代，接任者PS5将在2020年底发售，而且PS5会有向下兼容，向下兼容这个事，索尼在PS4时</description><content type="html"><![CDATA[<p>PS4时代就要结束了，主机大约每隔6年左右就会换代，接任者PS5将在2020年底发售，而且PS5会有向下兼容，向下兼容这个事，索尼在PS4时代可做的真的不算好。PS5向下兼容理想情况是：PS5兼容PS1-PS4全家桶，但若只兼容PS4，要这样我就要唱衰PS5啦。话说今天都2月底了，新Xbox都差发布价格了，你看索尼嘴可真严实啊，这是想TM搞个大新闻吗。</p>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Victor</title><link>https://vicfree.com/posts/</link><description>Recent content in Posts on Victor</description><generator>Hugo -- gohugo.io</generator><language>zh-hans</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Thu, 30 Apr 2020 18:49:43 +0800</lastBuildDate><atom:link href="https://vicfree.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>关于 PS5</title><link>https://vicfree.com/2020/04/about-ps5/</link><pubDate>Thu, 30 Apr 2020 18:49:43 +0800</pubDate><guid>https://vicfree.com/2020/04/about-ps5/</guid><description>Playstation 5 索尼在3月18日发布了一个原本在计划 GDCGame Developers Conference大会上演讲的视频，那个视频是讲给游戏开发者听的，内容非常的硬，还是需要我们翻</description><content type="html"><![CDATA[<h2 id="playstation-5">Playstation 5</h2>
+<p>索尼在3月18日发布了一个原本在计划 GDC<code>Game Developers Conference</code>大会上演讲的视频，那个视频是讲给游戏开发者听的，内容非常的硬，还是需要我们翻译成人话。</p>
+<p>演讲开始介绍了历代游戏主机的开发者熟悉周期，体现了这一次PS5开发工具对开发者很友好。</p>
+<table>
+<thead>
+<tr>
+<th align="center">PS1</th>
+<th align="center">PS2</th>
+<th align="center">PS3</th>
+<th align="center">PS4</th>
+<th align="center">PS5</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="center">1-2个月</td>
+<td align="center">3-6个月</td>
+<td align="center">6-12个月</td>
+<td align="center">1-2个月</td>
+<td align="center">小于1个月</td>
+</tr>
+</tbody>
+</table>
+<p>索尼也介绍了很多关于 PS5<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>软硬件的细节，但是很多信息都在传输中丢失了，或者歪曲了事实。</p>
+<h2 id="ps5的超快-ssd">PS5的超快 SSD</h2>
+<p>PS5 更快的 SSD 给予开发者自由，很多人都认为 PS5 这么快的SSD起不到作用，没有人会为了PS5这么快的SSD进行优化。</p>
+<p>乍一看好像说的没错，但是你自己想想PC，为什么有人买三星980 Pro，因为它速度快啊，你见过有游戏会为三星980 Pro进行优化吗，速度快，使得游戏每个环节都会运行的快，程序员写的程序再差也能流畅运行。</p>
+<p>并且每代主机寿命约6年，现在的每秒5.5GB/s，说不定5年后 SSD 每秒20GB/s，现在 SSD 成本虽然高，但是只是相较于HDD，和 Xbox SX 的2.4GB/s的SSD相比，价格差我猜每GB价格 PS5 是 XBox SX 的1.5倍。可能也是 PS5 内置825GB，Xbox SX内置1TB的原因。</p>
+<p>PS5 内置了 PCIe 4x4  12通道825GB SSD，索尼当然可以加入更大 SSD，但是最终价格依然会转嫁到消费者，所以索尼认为825G是最合适的大小。但发布时会不会出更大SSD没有提到。</p>
+<p>PS5支持外置 HDD 玩 PS4 游戏，PS5游戏不支持在外置 HDD 运行。</p>
+<p>PS5支持外置PCIe 4x4 M.2 SSD，可以购买消费者级SSD，但推荐2020年底等待 PS5 兼容 SSD。
+消费者级 M.2 SSD 只支持2个优先级，但是 PS5 内置SSD支持6个优先级，所以使用的M.2 SSD速度必须超过PS5内置SSD速度，以便PS5突然需要加载数据，假如是低速SSD此时会被其他数据传输占用，无法加载重要数据。</p>
+<h2 id="定制-rdna2-gpu">定制 RDNA2 GPU</h2>
+<p>假如你能看懂‘定制’是什么意思，就不会怀疑 PS5 使用的是 RDNA1 了。如果你怀疑 PS5 用的不是 RDNA2，你可以立即保存证据 <a href="https://www.youtube.com/watch?v=ph8LyNIT9sg">视频</a> <a href="https://blog.us.playstation.com/2020/03/18/unveiling-new-details-of-playstation-5-hardware-technical-specs/">博客</a>，等PS5上市，拿出上面的证据去告索尼欺诈，人越多，赔款越多，别我我没告诉你发财机会哦。</p>
+<p>PS5 很多技术都是和 AMD 共同研发，假如 RDNA2 显卡上市了，包含了 PS5 GPU 某些功能，并不表示 PS5 抄的 AMD/PC 的作业。</p>
+<p>PS5 支持向下 PS4 兼容，PS4 向下兼容是与 AMD 一起合作开发，但因为每个游戏都不一样，向下兼容也需要对应游戏做出相应的修改，如同每当一个新游戏出来，AMD/NV都会出一版优化特定游戏的驱动。</p>
+<p>索尼已测试 PS4 按时间排序前100的游戏，几乎所有<code>Almost all of them</code>游戏都能 PS5 上市时运行。</p>
+<p>PS5 支持光线追踪，个别游戏实现非常低的代价运行了以反射为基础的光线追踪。</p>
+<p>PS5 支持 AMD SmartShift, PS5 的 CPU GPU 的功耗就是跷跷板，CPU 功耗增高，GPU 功耗就会降低，反之亦然。</p>
+<p>Zen 2 CPU 3.5GHz, RDNA 2 GPU 2.23GHz<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>，并且 GPU 大部分时间都会保持或接近 2.23GHz 附近，通常降低10%功耗，只需要降低几个百分点的频率，所以 PS5 降频情况非常少。</p>
+<h2 id="3d-音频">3D 音频</h2>
+<p>画面虽然很重要，但是音频也比你想的要重要，PS5 使用 RDNA2 的 CU 进行改造，实现了类似 PS3 SPU的能力，Tempest Engine 让你用普通电视机扬声器也能有 3D 音效（当然带耳机更好），实现听声辩位。</p>
+<p>其他更详细的介绍请看A9VG的专栏。<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup></p>
+<h2 id="手柄">手柄</h2>
+<p>好不好看，见仁见智，但是手柄背面的图没有放出来，希望背面有惊喜<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>
+<img src="https://live.staticflickr.com/65535/49747503557_566da5ebc8_3k.jpg" alt="img"></p>
+<section class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1" role="doc-endnote">
+<p><a href="https://www.playstation.com/en-us/explore/ps5/">https://www.playstation.com/en-us/explore/ps5/</a> <a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2" role="doc-endnote">
+<p><a href="https://blog.us.playstation.com/2020/03/18/unveiling-new-details-of-playstation-5-hardware-technical-specs/">https://blog.us.playstation.com/2020/03/18/unveiling-new-details-of-playstation-5-hardware-technical-specs/</a> <a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3" role="doc-endnote">
+<p><a href="https://www.a9vg.com/article/71038">https://www.a9vg.com/article/71038</a> <a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4" role="doc-endnote">
+<p><a href="https://blog.us.playstation.com/2020/04/07/introducing-dualsense-the-new-wireless-game-controller-for-playstation-5/">https://blog.us.playstation.com/2020/04/07/introducing-dualsense-the-new-wireless-game-controller-for-playstation-5/</a> <a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</section>
+]]></content></item><item><title>我喜欢的PS4游戏</title><link>https://vicfree.com/2020/02/my-favourite-ps4-games/</link><pubDate>Sat, 29 Feb 2020 23:50:47 +0800</pubDate><guid>https://vicfree.com/2020/02/my-favourite-ps4-games/</guid><description>PS4时代就要结束了，主机大约每隔6年左右就会换代，接任者PS5将在2020年底发售，而且PS5会有向下兼容，向下兼容这个事，索尼在PS4时</description><content type="html"><![CDATA[<p>PS4时代就要结束了，主机大约每隔6年左右就会换代，接任者PS5将在2020年底发售，而且PS5会有向下兼容，向下兼容这个事，索尼在PS4时代可做的真的不算好。PS5向下兼容理想情况是：PS5兼容PS1-PS4全家桶，但若只兼容PS4，要这样我就要唱衰PS5啦。话说今天都2月底了，新Xbox都差发布价格了，你看索尼嘴可真严实啊，这是想TM搞个大新闻吗。</p>
 <p>说起我的游戏经历，我在PS4中期时才购买了PS4，在此之前一直是拿笔记本电脑玩的，很多学生都有类似的经历吧。我那是一台垃圾的i5-480M+GT540M，有啥不能玩的，降特效啊。15帧能玩，20帧流畅，那个时候真的玩了不少的游戏。</p>
 <p>这个清单我只推荐我玩过的，我认为好玩的才会列出来，关于一个游戏好不好玩，我只能以自身的体验和经历做参考的，并不能代表所有人。</p>
 <p>好开始吧</p>
