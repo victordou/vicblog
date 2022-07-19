@@ -17,43 +17,43 @@
 <ol>
 <li>在acme.json目录复制粘贴新建以下脚本，命名随意，如tc.sh</li>
 </ol>
-<pre tabindex="0"><code>#!/bin/bash
-
-# Requirements: you will need to install jq and maybe openssl
-
-# creates a directory for all of your certificates
-mkdir -p certificates/
-
-# reads the acme.json file, please put this file in the same directory as your script
-json=$(cat acme.json)
-
-export_cer_key () {
-    echo $json | jq -r &#39;.[].Certificates[] | select(.domain.main == &#34;&#39;$1&#39;&#34;) | .certificate&#39; | base64 -d &gt; certificates/$1.cer
-    echo $json | jq -r &#39;.[].Certificates[] | select(.domain.main == &#34;&#39;$1&#39;&#34;) | .key&#39; | base64 -d &gt; certificates/$1.key
-}
-
-export_pfx () {
-        openssl pkcs12 -export -out certificates/$domain.pfx -inkey certificates/$domain.key -in certificates/$domain.cer -passout pass: 
-}
-
-read -p &#34;Do you want to export as .pfx file as well [y]?&#34; REPLY
-
-# iterates through all of your domains
-for domain in $(echo $json | jq -r &#39;.[].Certificates[].domain.main&#39;)
-do
-    if [[ $REPLY =~ ^[Yy]$ ]]
-    then
-        export_cer_key &#34;$domain&#34;
-        export_pfx &#34;$domain&#34;
-    else
-        export_cer_key &#34;$domain&#34;
-    fi
-done
-</code></pre><ol start="2">
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="cp">#!/bin/bash
+</span></span></span><span class="line"><span class="cl"><span class="cp"></span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Requirements: you will need to install jq and maybe openssl</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># creates a directory for all of your certificates</span>
+</span></span><span class="line"><span class="cl">mkdir -p certificates/
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># reads the acme.json file, please put this file in the same directory as your script</span>
+</span></span><span class="line"><span class="cl"><span class="nv">json</span><span class="o">=</span><span class="k">$(</span>cat acme.json<span class="k">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">export_cer_key <span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> <span class="nv">$json</span> <span class="p">|</span> jq -r <span class="s1">&#39;.[].Certificates[] | select(.domain.main == &#34;&#39;</span><span class="nv">$1</span><span class="s1">&#39;&#34;) | .certificate&#39;</span> <span class="p">|</span> base64 -d &gt; certificates/<span class="nv">$1</span>.cer
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> <span class="nv">$json</span> <span class="p">|</span> jq -r <span class="s1">&#39;.[].Certificates[] | select(.domain.main == &#34;&#39;</span><span class="nv">$1</span><span class="s1">&#39;&#34;) | .key&#39;</span> <span class="p">|</span> base64 -d &gt; certificates/<span class="nv">$1</span>.key
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">export_pfx <span class="o">()</span> <span class="o">{</span>
+</span></span><span class="line"><span class="cl">        openssl pkcs12 -export -out certificates/<span class="nv">$domain</span>.pfx -inkey certificates/<span class="nv">$domain</span>.key -in certificates/<span class="nv">$domain</span>.cer -passout pass: 
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">read</span> -p <span class="s2">&#34;Do you want to export as .pfx file as well [y]?&#34;</span> REPLY
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># iterates through all of your domains</span>
+</span></span><span class="line"><span class="cl"><span class="k">for</span> domain in <span class="k">$(</span><span class="nb">echo</span> <span class="nv">$json</span> <span class="p">|</span> jq -r <span class="s1">&#39;.[].Certificates[].domain.main&#39;</span><span class="k">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">do</span>
+</span></span><span class="line"><span class="cl">    <span class="k">if</span> <span class="o">[[</span> <span class="nv">$REPLY</span> <span class="o">=</span>~ ^<span class="o">[</span>Yy<span class="o">]</span>$ <span class="o">]]</span>
+</span></span><span class="line"><span class="cl">    <span class="k">then</span>
+</span></span><span class="line"><span class="cl">        export_cer_key <span class="s2">&#34;</span><span class="nv">$domain</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">        export_pfx <span class="s2">&#34;</span><span class="nv">$domain</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">else</span>
+</span></span><span class="line"><span class="cl">        export_cer_key <span class="s2">&#34;</span><span class="nv">$domain</span><span class="s2">&#34;</span>
+</span></span><span class="line"><span class="cl">    <span class="k">fi</span>
+</span></span><span class="line"><span class="cl"><span class="k">done</span>
+</span></span></code></pre></div><ol start="2">
 <li>对刚新建的脚本添加执行权限</li>
 </ol>
-<pre tabindex="0"><code>chmod +x tc.sh
-</code></pre><ol start="3">
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">chmod +x tc.sh
+</span></span></code></pre></div><ol start="3">
 <li>确认同目录下同时存在tc.sh 和 acme.json</li>
 </ol>
 <pre tabindex="0"><code>traefik
@@ -62,8 +62,8 @@ done
 </code></pre><ol start="4">
 <li>执行脚本</li>
 </ol>
-<pre tabindex="0"><code>./tc.sh
-</code></pre><ol start="5">
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">./tc.sh
+</span></span></code></pre></div><ol start="5">
 <li>可选导出 pfx 格式证书，证书会出现在 certificates 文件夹里面</li>
 </ol>
 <pre tabindex="0"><code>traefik
