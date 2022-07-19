@@ -131,20 +131,25 @@ jobs:
           CONFIG_PACKAGE_luci-app-wireguard=y
           CONFIG_PACKAGE_luci-app-https-dns-proxy=y
           CONFIG_PACKAGE_luci-app-netdata=y
-          # CONFIG_PACKAGE_luci-app-ttyd is not set
+          CONFIG_PACKAGE_luci-app-p910nd=y
           CONFIG_PACKAGE_luci-app-ssr-plus=y
+          CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Hysteria=y
           CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_IPT2Socks=y
           CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Trojan=y
-          # CONFIG_PACKAGE_luci-app-unblockmusic is not set
+          CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_DNSFORWARDER=y
+          CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_DNSPROXY=y
           CONFIG_PACKAGE_luci-app-uugamebooster=y
+          CONFIG_PACKAGE_luci-app-syncdial=y
+          # CONFIG_PACKAGE_luci-app-unblockmusic is not set
+          # CONFIG_PACKAGE_luci-app-ttyd is not set
           # CONFIG_PACKAGE_luci-app-xlnetacc is not set
-          CONFIG_PACKAGE_luci-app-mwan3helper=y
+          CONFIG_PACKAGE_luci-theme-argon=y
           CONFIG_PACKAGE_luci-theme-bootstrap=y
           CONFIG_PACKAGE_luci-theme-material=y
+          CONFIG_PACKAGE_luci-theme-netgear=y
           CONFIG_PACKAGE_ddns-scripts_cloudflare.com-v4=y
           CONFIG_PACKAGE_ddns-scripts_no-ip_com=y
           CONFIG_PACKAGE_ddns-scripts_route53-v1=y
-          CONFIG_PACKAGE_kmod-macvlan=y
           CONFIG_PACKAGE_bind-dig=y
           CONFIG_PACKAGE_nano=y
           CONFIG_PACKAGE_qrencode=y

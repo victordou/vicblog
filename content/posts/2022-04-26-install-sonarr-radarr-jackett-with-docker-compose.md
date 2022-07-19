@@ -120,7 +120,7 @@ nano /etc/fstab
 ```
 粘贴以下内容
 ```
-//192.168.xx.xx/xxx/downloads /home/xxx/downloads cifs username=xxx,password=xxx,uid=1000,gid=1000 0 0
+//192.168.xx.xx/xxx/downloads /home/xxx/downloads cifs username=xxx,password=xxx,uid=1000,gid=1000,noauto,x-systemd.automount,_netdev,vers=2.1 0 0
 ```
 
 ```

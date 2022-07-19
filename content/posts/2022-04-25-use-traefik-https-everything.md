@@ -48,7 +48,7 @@ touch data/config.yml
 touch docker-compose.yml
 docker network create proxy
 ```
-生成网页密码，填入到配置中
+（可选）生成网页密码，填入到配置中
 ```bash
 sudo apt update
 sudo apt install apache2-utils
