@@ -1,4 +1,86 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Victor</title><link>https://vicfree.com/posts/</link><description>Recent content in Posts on Victor</description><generator>Hugo -- gohugo.io</generator><language>zh-hans</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Tue, 17 May 2022 15:21:34 +0800</lastBuildDate><atom:link href="https://vicfree.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>利用 Github Action 自动编译OpenWrt</title><link>https://vicfree.com/2022/05/github-action-auto-compile-openwrt/</link><pubDate>Tue, 17 May 2022 15:21:34 +0800</pubDate><guid>https://vicfree.com/2022/05/github-action-auto-compile-openwrt/</guid><description>本次教程基于下列前车之鉴 https://github.com/coolsnowwolf/lede https://github.com/KFERMercer/OpenWrt-CI 注册Github 本步骤跳过，网上一大堆 Fork Openwrt https://github.com/coolsnowwolf/lede/fork 开启Github Action 进入你 fork 成功后的lede/openwrt 进入 Action 阅读</description><content type="html"><![CDATA[<h2 id="本次教程基于下列前车之鉴">本次教程基于下列前车之鉴</h2>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Victor</title><link>https://vicfree.com/posts/</link><description>Recent content in Posts on Victor</description><generator>Hugo -- gohugo.io</generator><language>zh-hans</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Tue, 19 Jul 2022 17:03:20 +0800</lastBuildDate><atom:link href="https://vicfree.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>traefik acme 证书导出</title><link>https://vicfree.com/2022/07/traefik-cert-export/</link><pubDate>Tue, 19 Jul 2022 17:03:20 +0800</pubDate><guid>https://vicfree.com/2022/07/traefik-cert-export/</guid><description>来自 https://blog.cubieserver.de/2021/minimal-traefik-v2-certificate-export/ 目前有很多方式导出证书，docker可以自动化，自己选择吧。 https://github.com/ldez/traefik-certs-dumper (Go) https://github.com/koshatul/traefik-acme (Go) https://gist.github.com/dmnt3d/a9696d1590df0a1410be8954df15f59c (Python) https://r4uch.com/export-traefik-certificates/ (Bash) 如何使用bash脚本手动导出证书？ 要求 Linux 系统的虚拟机 traefik 生成</description><content type="html"><![CDATA[<p>来自 <a href="https://blog.cubieserver.de/2021/minimal-traefik-v2-certificate-export/">https://blog.cubieserver.de/2021/minimal-traefik-v2-certificate-export/</a></p>
+<p>目前有很多方式导出证书，docker可以自动化，自己选择吧。</p>
+<ul>
+<li><a href="https://github.com/ldez/traefik-certs-dumper">https://github.com/ldez/traefik-certs-dumper</a> (Go)</li>
+<li><a href="https://github.com/koshatul/traefik-acme">https://github.com/koshatul/traefik-acme</a> (Go)</li>
+<li><a href="https://gist.github.com/dmnt3d/a9696d1590df0a1410be8954df15f59c">https://gist.github.com/dmnt3d/a9696d1590df0a1410be8954df15f59c</a> (Python)</li>
+<li><a href="https://r4uch.com/export-traefik-certificates/">https://r4uch.com/export-traefik-certificates/</a> (Bash)</li>
+</ul>
+<p>如何使用bash脚本手动导出证书？</p>
+<h2 id="要求">要求</h2>
+<ol>
+<li>Linux 系统的虚拟机</li>
+<li>traefik 生成的acme.json</li>
+<li>Linux 安装了 jq + openssl</li>
+</ol>
+<h2 id="开始操作">开始操作</h2>
+<ol>
+<li>在acme.json目录复制粘贴新建以下脚本，命名随意，如tc.sh</li>
+</ol>
+<pre tabindex="0"><code>#!/bin/bash
+
+# Requirements: you will need to install jq and maybe openssl
+
+# creates a directory for all of your certificates
+mkdir -p certificates/
+
+# reads the acme.json file, please put this file in the same directory as your script
+json=$(cat acme.json)
+
+export_cer_key () {
+    echo $json | jq -r &#39;.[].Certificates[] | select(.domain.main == &#34;&#39;$1&#39;&#34;) | .certificate&#39; | base64 -d &gt; certificates/$1.cer
+    echo $json | jq -r &#39;.[].Certificates[] | select(.domain.main == &#34;&#39;$1&#39;&#34;) | .key&#39; | base64 -d &gt; certificates/$1.key
+}
+
+export_pfx () {
+        openssl pkcs12 -export -out certificates/$domain.pfx -inkey certificates/$domain.key -in certificates/$domain.cer -passout pass: 
+}
+
+read -p &#34;Do you want to export as .pfx file as well [y]?&#34; REPLY
+
+# iterates through all of your domains
+for domain in $(echo $json | jq -r &#39;.[].Certificates[].domain.main&#39;)
+do
+    if [[ $REPLY =~ ^[Yy]$ ]]
+    then
+        export_cer_key &#34;$domain&#34;
+        export_pfx &#34;$domain&#34;
+    else
+        export_cer_key &#34;$domain&#34;
+    fi
+done
+</code></pre><ol start="2">
+<li>对刚新建的脚本添加执行权限</li>
+</ol>
+<pre tabindex="0"><code>chmod +x tc.sh
+</code></pre><ol start="3">
+<li>确认同目录下同时存在tc.sh 和 acme.json</li>
+</ol>
+<pre tabindex="0"><code>traefik
+├── tc.sh
+└── acme.json
+</code></pre><ol start="4">
+<li>执行脚本</li>
+</ol>
+<pre tabindex="0"><code>./tc.sh
+</code></pre><ol start="5">
+<li>可选导出 pfx 格式证书，证书会出现在 certificates 文件夹里面</li>
+</ol>
+<pre tabindex="0"><code>traefik
+├── certificates
+│   ├── cert.cer
+│   ├── cert.key
+│   └── cert.pfx
+├── tc.sh
+└── acme.json
+</code></pre><h3 id="假如以上是半自动证书导出下面还有全手动的方法">假如以上是半自动证书导出，下面还有全手动的方法。</h3>
+<ol>
+<li>复制 acme.json 中 certificates 那一行</li>
+<li>粘贴到 <a href="https://oktools.net/base64">Base64解码</a> 中解码栏</li>
+<li>文本编辑器保存解码结果为 cert.crt</li>
+<li>key同理，保存为 cert.key</li>
+</ol>
+]]></content></item><item><title>利用 Github Action 自动编译OpenWrt</title><link>https://vicfree.com/2022/05/github-action-auto-compile-openwrt/</link><pubDate>Tue, 17 May 2022 15:21:34 +0800</pubDate><guid>https://vicfree.com/2022/05/github-action-auto-compile-openwrt/</guid><description>本次教程基于下列前车之鉴 https://github.com/coolsnowwolf/lede https://github.com/KFERMercer/OpenWrt-CI 注册Github 本步骤跳过，网上一大堆 Fork Openwrt https://github.com/coolsnowwolf/lede/fork 开启Github Action 进入你 fork 成功后的lede/openwrt 进入 Action 阅读</description><content type="html"><![CDATA[<h2 id="本次教程基于下列前车之鉴">本次教程基于下列前车之鉴</h2>
 <p><a href="https://github.com/coolsnowwolf/lede">https://github.com/coolsnowwolf/lede</a></p>
 <p><a href="https://github.com/KFERMercer/OpenWrt-CI">https://github.com/KFERMercer/OpenWrt-CI</a></p>
 <h2 id="注册github">注册Github</h2>
@@ -117,20 +199,25 @@
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_luci-app-wireguard=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_luci-app-https-dns-proxy=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_luci-app-netdata=y
-</span></span></span><span class="line"><span class="cl"><span class="sd">          # CONFIG_PACKAGE_luci-app-ttyd is not set
+</span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_luci-app-p910nd=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_luci-app-ssr-plus=y
+</span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Hysteria=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_IPT2Socks=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Trojan=y
-</span></span></span><span class="line"><span class="cl"><span class="sd">          # CONFIG_PACKAGE_luci-app-unblockmusic is not set
+</span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_DNSFORWARDER=y
+</span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_DNSPROXY=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_luci-app-uugamebooster=y
+</span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_luci-app-syncdial=y
+</span></span></span><span class="line"><span class="cl"><span class="sd">          # CONFIG_PACKAGE_luci-app-unblockmusic is not set
+</span></span></span><span class="line"><span class="cl"><span class="sd">          # CONFIG_PACKAGE_luci-app-ttyd is not set
 </span></span></span><span class="line"><span class="cl"><span class="sd">          # CONFIG_PACKAGE_luci-app-xlnetacc is not set
-</span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_luci-app-mwan3helper=y
+</span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_luci-theme-argon=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_luci-theme-bootstrap=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_luci-theme-material=y
+</span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_luci-theme-netgear=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_ddns-scripts_cloudflare.com-v4=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_ddns-scripts_no-ip_com=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_ddns-scripts_route53-v1=y
-</span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_kmod-macvlan=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_bind-dig=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_nano=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_qrencode=y
@@ -307,7 +394,7 @@
 </code></pre><p>如果你想开机自动挂载</p>
 <pre tabindex="0"><code>nano /etc/fstab
 </code></pre><p>粘贴以下内容</p>
-<pre tabindex="0"><code>//192.168.xx.xx/xxx/downloads /home/xxx/downloads cifs username=xxx,password=xxx,uid=1000,gid=1000 0 0
+<pre tabindex="0"><code>//192.168.xx.xx/xxx/downloads /home/xxx/downloads cifs username=xxx,password=xxx,uid=1000,gid=1000,noauto,x-systemd.automount,_netdev,vers=2.1 0 0
 </code></pre><pre tabindex="0"><code>sudo mount -a
 </code></pre><p>测试一下，一切正常就可以重启试试了</p>
 <h2 id="软件如何使用">软件如何使用？</h2>
@@ -344,7 +431,7 @@
 </span></span><span class="line"><span class="cl">touch data/config.yml
 </span></span><span class="line"><span class="cl">touch docker-compose.yml
 </span></span><span class="line"><span class="cl">docker network create proxy
-</span></span></code></pre></div><p>生成网页密码，填入到配置中</p>
+</span></span></code></pre></div><p>（可选）生成网页密码，填入到配置中</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sudo apt update
 </span></span><span class="line"><span class="cl">sudo apt install apache2-utils
 </span></span><span class="line"><span class="cl"><span class="nb">echo</span> <span class="k">$(</span>htpasswd -nb admin 12345678<span class="k">)</span> <span class="p">|</span> sed -e s/<span class="se">\\</span>$/<span class="se">\\</span>$<span class="se">\\</span>$/g
@@ -655,10 +742,10 @@ Cloudflare 新增域名解析到你的路由器DDNS上</p>
 <p>说到这个游戏，玩法真的太追求真实，有点累。但是它营造了一个非常真实的世界，你可以全身心去体验这个世界。R星物理做的真的是第一，没话说。</p>
 </blockquote>
 <ul>
-<li>赛博朋克2077 <a href="http://www.vgtime.com/game/73.jhtml">Cyberpunk 2077</a></li>
+<li><del>赛博朋克2077 <a href="http://www.vgtime.com/game/73.jhtml">Cyberpunk 2077</a></del></li>
 </ul>
 <blockquote>
-<p>虽然还没发售，但是我知道我会很喜欢它的。</p>
+<p><del>虽然还没发售，但是我知道我会很喜欢它的。</del></p>
 </blockquote>
 <p>见识浅薄，只能写这么多了。</p>
 ]]></content></item><item><title>第一篇测试文章</title><link>https://vicfree.com/2020/02/my-first-post/</link><pubDate>Tue, 25 Feb 2020 19:26:13 +0800</pubDate><guid>https://vicfree.com/2020/02/my-first-post/</guid><description>Hello World! You MotherFucker! 国际惯例的标准hello world开始。</description><content type="html"><![CDATA[<p>Hello World!</p>
