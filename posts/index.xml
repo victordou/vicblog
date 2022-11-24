@@ -1,4 +1,179 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Victor</title><link>https://vicfree.com/posts/</link><description>Recent content in Posts on Victor</description><generator>Hugo -- gohugo.io</generator><language>zh-hans</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Tue, 19 Jul 2022 17:03:20 +0800</lastBuildDate><atom:link href="https://vicfree.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>traefik acme 证书导出</title><link>https://vicfree.com/2022/07/traefik-cert-export/</link><pubDate>Tue, 19 Jul 2022 17:03:20 +0800</pubDate><guid>https://vicfree.com/2022/07/traefik-cert-export/</guid><description>来自 https://blog.cubieserver.de/2021/minimal-traefik-v2-certificate-export/ 目前有很多方式导出证书，docker可以自动化，自己选择吧。 https://github.com/ldez/traefik-certs-dumper (Go) https://github.com/koshatul/traefik-acme (Go) https://gist.github.com/dmnt3d/a9696d1590df0a1410be8954df15f59c (Python) https://r4uch.com/export-traefik-certificates/ (Bash) 如何使用bash脚本手动导出证书？ 要求 Linux 系统的虚拟机 traefik 生成</description><content type="html"><![CDATA[<p>来自 <a href="https://blog.cubieserver.de/2021/minimal-traefik-v2-certificate-export/">https://blog.cubieserver.de/2021/minimal-traefik-v2-certificate-export/</a></p>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Victor</title><link>https://vicfree.com/posts/</link><description>Recent content in Posts on Victor</description><generator>Hugo -- gohugo.io</generator><language>zh-hans</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Thu, 24 Nov 2022 11:50:38 +0800</lastBuildDate><atom:link href="https://vicfree.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>如何正确配置 OpenWrt WPA3 + 802.11kvr</title><link>https://vicfree.com/2022/11/openwrt-wpa3-802.11kvr-ap-setup/</link><pubDate>Thu, 24 Nov 2022 11:50:38 +0800</pubDate><guid>https://vicfree.com/2022/11/openwrt-wpa3-802.11kvr-ap-setup/</guid><description>在优化家里Wi-Fi过程中，发现不管是中文英文，无线漫游、802.11kvr相关的视频帖子要么是简单的复制粘贴，要么夹杂在大量无效信息内，所</description><content type="html"><![CDATA[<p>在优化家里Wi-Fi过程中，发现不管是中文英文，无线漫游、802.11kvr相关的视频帖子要么是简单的复制粘贴，要么夹杂在大量无效信息内，所以今天给大家总结一下我学到的东西。</p>
+<p>很多Android手机不支持漫游，想退出，还来得及。</p>
+<h2 id="准备工作">准备工作</h2>
+<ol>
+<li>
+<p>安装支持 wps3 802.11kvr mesh 的 package<sup id="fnref:1"><a href="#fn:1" class="footnote-ref" role="doc-noteref">1</a></sup>.</p>
+<blockquote>
+<p>官方<sup id="fnref:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>只说了请安装完整版本 hostapd or wpad，你是装 hostapd 完整版还是 wpad 完整版。并且你猜哪个版本是完整版？ wpad? wpad-wolfssl? wpad-openssl? wpad-mesh-wolfssl?</p>
+</blockquote>
+<blockquote>
+<p>解释：这些包的<a href="https://github.com/openwrt/openwrt/blob/master/package/network/services/hostapd/Makefile">源码</a>都是一样的只是包含的组件不一样，推荐不要动 hostapd，只升级 wpad。推荐使用 wpad-wolfssl <a href="https://github.com/openwrt/openwrt/commit/49cc712b44c76e99bfb716c06700817692975e05">因为它包含 wpa3+mesh+802.11r 最完整也最小体积</a>。</p>
+</blockquote>
+</li>
+<li>
+<p>回想一下你目前网络架构，你都准备用无线 802.11kvr 漫游了，说明你有多个AP，那你的 AP 开启 AP 模式了吗？</p>
+<blockquote>
+<p><a href="https://openwrt.org/zh/docs/guide-user/network/wifi/dumbap#%E4%BD%BF%E7%94%A8openwrt%E7%9A%84web%E7%95%8C%E9%9D%A2luci%E8%BF%9B%E8%A1%8C%E9%85%8D%E7%BD%AE">你先看这个中文教程开启AP模式再说吧</a>，简单来说就是：改LAN IP -&gt; 关 LAN DHCP -&gt; 禁用 firewall, dnsmasq and odhcpd 服务.</p>
+</blockquote>
+<blockquote>
+<p>因为 AP 不参加 DHCP，已连接设备列表只能看到mac+ip， 官方给了方法：手动把主路由 DHCP 记录导出到 AP 的 /etc/ethers 文件中。DHCP设备清单导出命令是：<code>cat /tmp/dhcp.leases | awk '{print $2&quot; &quot;$4}'</code></p>
+</blockquote>
+<blockquote>
+<p>已禁用的 firewall, dnsmasq, odhcpd 服务会在升级固件后重新启用，可以把这个脚步添加到 系统-&gt;启动-&gt;本地启动脚本（看提示，不要粘贴到最后一行）。</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl"># these services do not run on dumb APs
+</span></span><span class="line"><span class="cl"><span class="k">for</span> i in firewall dnsmasq odhcpd; do
+</span></span><span class="line"><span class="cl">  if /etc/init.d/<span class="s2">&#34;$i&#34;</span> enabled; then
+</span></span><span class="line"><span class="cl">    /etc/init.d/<span class="s2">&#34;$i&#34;</span> disable
+</span></span><span class="line"><span class="cl">    /etc/init.d/<span class="s2">&#34;$i&#34;</span> stop
+</span></span><span class="line"><span class="cl">  fi
+</span></span><span class="line"><span class="cl">done
+</span></span></code></pre></div></li>
+<li>
+<p>顺便说一下这个 Dumb AP 页面<sup id="fnref:3"><a href="#fn:3" class="footnote-ref" role="doc-noteref">3</a></sup>，网页最底下有个<code>option igmp_snooping '1'</code> 这个igmp指的是IPTV，DLNA 组播流，如果你的交换机不支持这个 snooping，组播流会淹没你的Wi-Fi，每时每刻都在给你的 Wi-Fi 推组播流，降低你的无线性能。snooping 开启后，只有在有人用到组播流的时候，才会推组播流，其它时候会被OpenWrt交换机或独立交换机掐掉组播流。</p>
+</li>
+</ol>
+<h2 id="开始配置">开始配置</h2>
+<p>写的越来越多了，直接开启吧～</p>
+<h3 id="tldrssh进路由运行下面脚本">TLDR：SSH进路由运行下面脚本</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl">uci set wireless.default_radio0.ieee80211k=1
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio0.wnm_sleep_mode=1
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio0.bss_transition=1
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio0.mobility_domain=8888
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio0.ft_over_ds=0
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio0.ft_psk_generate_local=0
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio0.reassociation_deadline=20000
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio0.max_inactivity=60
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio1.ieee80211k=1
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio1.wnm_sleep_mode=1
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio1.bss_transition=1
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio1.mobility_domain=8888
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio1.ft_over_ds=0
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio1.ft_psk_generate_local=0
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio1.reassociation_deadline=20000
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio1.max_inactivity=60
+</span></span><span class="line"><span class="cl">uci commit wireless
+</span></span><span class="line"><span class="cl">wifi reload
+</span></span></code></pre></div><p>上面的命令会将下面的参数会写到 <code>/etc/config/wireless</code></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl">option ieee80211k &#39;1&#39;
+</span></span><span class="line"><span class="cl">option wnm_sleep_mode &#39;1&#39;
+</span></span><span class="line"><span class="cl">option bss_transition &#39;1&#39;
+</span></span><span class="line"><span class="cl">option ieee80211r &#39;1&#39;
+</span></span><span class="line"><span class="cl">option mobility_domain &#39;8888&#39;
+</span></span><span class="line"><span class="cl">option ft_over_ds &#39;0&#39;
+</span></span><span class="line"><span class="cl">option ft_psk_generate_local &#39;0&#39;
+</span></span><span class="line"><span class="cl">option reassociation_deadline &#39;20000&#39;
+</span></span><span class="line"><span class="cl">option max_inactivity &#39;60&#39;
+</span></span></code></pre></div><p>如果上面参数已经被你改坏掉了，可以删除 <code>/etc/config/wireless</code>，使用 <code>wifi config</code> 重新生成配置。</p>
+<ol>
+<li>
+<p><a href="https://openwrt.org/docs/guide-user/network/wifi/basic#neighbor_reports_options_80211k">802.11k</a>, 官方 OpenWrt Luci没有此项设置，需手动添加<code>option ieee80211k '1'</code>来开启。国内很多 OpenWrt 是有luci配置选项的。</p>
+</li>
+<li>
+<p><a href="https://openwrt.org/docs/guide-user/network/wifi/basic#bss_transition_management_frames_options_80211v">802.11v</a>, 同上。</p>
+<blockquote>
+<p><code>option ieee80211v '1'</code> 是多余的设置已被<a href="https://github.com/openwrt/openwrt/commit/b518f07d4b8ae144453c606c9ec4ecef7d39f968">弃用</a></p>
+</blockquote>
+<blockquote>
+<p>802.11v 还有另外一个设置， time_advertisement/广播同步时间，好像就是字面意思，无线数据包中包含时区信息，我也不清楚，<a href="https://www.mail-archive.com/openwrt-devel@lists.openwrt.org/msg60773.html">OpenWrt邮件</a>是这么说的，我觉得没啥用，不启用了。</p>
+</blockquote>
+</li>
+<li>
+<p><a href="https://openwrt.org/docs/guide-user/network/wifi/basic#fast_bss_transition_options_80211r">802.11r</a>, 这个设置官方OpenWrt Luci中包含了这个设置。简单就是说：802.11r <code>打勾</code> -&gt; NAS ID <code>不填</code> -&gt; 移动域/Mobility Domain <code>可以不填</code> -&gt; 重关联截止时间/Reassociation Deadline 填<code>20000</code> -&gt; FT protocol/FT 协议 选<code>FT over the Air</code> -&gt; 本地生成 PMK/Generate PMK locally <code>取消勾</code> -&gt; 剩下所有参数全部默认不修改。</p>
+<blockquote>
+<p>WPA3 必须<code>取消勾</code> 本地生成 PMK/Generate PMK locally，<a href="https://forum.openwrt.org/t/wpa3-with-802-11r-ft-sae-not-working/103583/6">用户问了hostapd的人</a>，必须 <code>option ft_psk_generate_local '0'</code></p>
+</blockquote>
+<blockquote>
+<p>iOS 用户必须将 FT 改为 <a href="https://github.com/openwrt/openwrt/issues/7907">FT over the Air</a>，<code>option ft_over_ds '0'</code>, 这个参数是从Cisco那边抄过来的。</p>
+</blockquote>
+<blockquote>
+<p>iOS 提示 <code>hostapd: nl80211: kernel reports: key addition failed</code> 这个错误，<a href="https://forum.openwrt.org/t/802-11r-fast-transition-how-to-understand-that-ft-works/110920/61">OpenWrt开发者提到目前在TODO流程中</a></p>
+</blockquote>
+<blockquote>
+<p>NAS ID 为啥不填，<a href="https://openwrt.org/docs/guide-user/network/wifi/basic#fast_bss_transition_options_80211r">OpenWrt Guide要求填</a>，<a href="https://forum.openwrt.org/t/802-11r-fast-transition-how-to-understand-that-ft-works/110920/77">开发者说不填，OpenWrt会用mac代替</a>，因为开发者改代码速度比官方Guide快而已，开发者在论坛回帖子，回复时想起来有个bug，<a href="https://github.com/openwrt/openwrt/commit/e6df13d0e16dd394ca26a80feeb013234948e875">立马提patch</a>。</p>
+</blockquote>
+<blockquote>
+<p>OpenWrt 开发者给出了<a href="https://forum.openwrt.org/t/802-11r-fast-transition-how-to-understand-that-ft-works/110920/83">他的参数</a>，供参考。</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl">config wifi-iface &#39;Xxx_radio1&#39;
+</span></span><span class="line"><span class="cl">        option device &#39;radio1&#39;
+</span></span><span class="line"><span class="cl">        option network &#39;lan&#39;
+</span></span><span class="line"><span class="cl">        option mode &#39;ap&#39;
+</span></span><span class="line"><span class="cl">        option ssid &#39;Xxx&#39;
+</span></span><span class="line"><span class="cl">        option encryption &#39;sae&#39;
+</span></span><span class="line"><span class="cl">        option key &#39;***&#39;
+</span></span><span class="line"><span class="cl">        option ieee80211w &#39;2&#39;
+</span></span><span class="line"><span class="cl">        option ieee80211r &#39;1&#39;
+</span></span><span class="line"><span class="cl">        option ft_psk_generate_local &#39;0&#39;
+</span></span><span class="line"><span class="cl">        option ft_over_ds &#39;0&#39;
+</span></span><span class="line"><span class="cl">        option ieee80211k &#39;1&#39;
+</span></span><span class="line"><span class="cl">        option bss_transition &#39;1&#39;
+</span></span><span class="line"><span class="cl">        option ieee80211v &#39;1&#39;
+</span></span><span class="line"><span class="cl">        option disassoc_low_ack &#39;0&#39;
+</span></span></code></pre></div></li>
+</ol>
+<h2 id="测试能否成功漫游">测试能否成功漫游</h2>
+<p>一般来说拿个iPhone，在两个AP直接来回晃悠就行了。
+晃悠完了，来到 AP 看日志。</p>
+<ol>
+<li>
+<p>第一次连接AP，会出现 <code>EAPOL-4WAY-HS-COMPLETED</code></p>
+</li>
+<li>
+<p>漫游成功会出现 <code>AP-STA-CONNECTED</code></p>
+<blockquote>
+<p>老版本 OpenWrt 可能没有这个提示，需要手动调整 <code>option log_level '1'</code></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl">uci set wireless.radio0.log_level=1
+</span></span><span class="line"><span class="cl">uci set wireless.radio1.log_level=1
+</span></span><span class="line"><span class="cl">uci commit wireless
+</span></span><span class="line"><span class="cl">wifi reload
+</span></span></code></pre></div><blockquote>
+<p>这个提示说明漫游成功 <code>WPA: FT authentication already completed - do not start 4-way handshake</code></p>
+</blockquote>
+</li>
+</ol>
+<h2 id="经验">经验</h2>
+<blockquote>
+<p>Wi-Fi 配置文件在 <code>/etc/config/wireless</code></p>
+</blockquote>
+<blockquote>
+<p>Wi-Fi 运行配置在 <code>/var/run/hostapd-phy0.conf</code> <code>/var/run/hostapd-phy1.conf</code></p>
+</blockquote>
+<p>所有有关Wi-Fi的配置基本都在这里，很多自动生成的配置不保存在wireless里，只存在hosapd conf里。</p>
+<p>很多 OpenWrt 参数可能会改变，修改前记得查源码<sup id="fnref:4"><a href="#fn:4" class="footnote-ref" role="doc-noteref">4</a></sup>，查手册<sup id="fnref1:2"><a href="#fn:2" class="footnote-ref" role="doc-noteref">2</a></sup>，查官方论坛<sup id="fnref:5"><a href="#fn:5" class="footnote-ref" role="doc-noteref">5</a></sup></p>
+<h2 id="手机-wi-fi-网络工具app">手机 Wi-Fi 网络工具APP</h2>
+<p>因为APP重名比较多，直接写包名+显示名
+Android:</p>
+<p><code>com.ubnt.usurvey</code> WiFiman, 最好看，好用。</p>
+<p><code>net.techet.netanalyzerlite.an</code> Network Analyzer, 一般好用，功能多一点。</p>
+<p><code>com.vrem.wifianalyzer</code> WiFi Analyzer (open-source), 扫描Wi-Fi的信息，可以看有没有开FT(漫游)。</p>
+<p>iPhone:</p>
+<p><code>com.dayananetworks.networkutilities </code>Network Utilities &amp; Analyzer 功能足够多，但是因为 iPhone 不显示本地设备mac，聊胜于无。</p>
+<p>还有一个工具，不好看，但功能最多。
+<code>net.he.NetworkUtility</code> or <code>net.he.networktools</code> HE.NET Network Tools</p>
+<div class="footnotes" role="doc-endnotes">
+<hr>
+<ol>
+<li id="fn:1">
+<p><a href="https://openwrt.org/packages/index/network---wirelessapd">https://openwrt.org/packages/index/network---wirelessapd</a>&#160;<a href="#fnref:1" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:2">
+<p><a href="https://openwrt.org/docs/guide-user/network/wifi/basic">https://openwrt.org/docs/guide-user/network/wifi/basic</a>&#160;<a href="#fnref:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a>&#160;<a href="#fnref1:2" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:3">
+<p><a href="https://openwrt.org/docs/guide-user/network/wifi/dumbap">https://openwrt.org/docs/guide-user/network/wifi/dumbap</a>&#160;<a href="#fnref:3" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:4">
+<p><a href="https://github.com/openwrt/openwrt/issues/">https://github.com/openwrt/openwrt/issues/</a>&#160;<a href="#fnref:4" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+<li id="fn:5">
+<p><a href="https://forum.openwrt.org/">https://forum.openwrt.org/</a>&#160;<a href="#fnref:5" class="footnote-backref" role="doc-backlink">&#x21a9;&#xfe0e;</a></p>
+</li>
+</ol>
+</div>
+]]></content></item><item><title>traefik acme 证书导出</title><link>https://vicfree.com/2022/07/traefik-cert-export/</link><pubDate>Tue, 19 Jul 2022 17:03:20 +0800</pubDate><guid>https://vicfree.com/2022/07/traefik-cert-export/</guid><description>来自 https://blog.cubieserver.de/2021/minimal-traefik-v2-certificate-export/ 目前有很多方式导出证书，docker可以自动化，自己选择吧。 https://github.com/ldez/traefik-certs-dumper (Go) https://github.com/koshatul/traefik-acme (Go) https://gist.github.com/dmnt3d/a9696d1590df0a1410be8954df15f59c (Python) https://r4uch.com/export-traefik-certificates/ (Bash) 如何使用bash脚本手动导出证书？ 要求 Linux 系统的虚拟机 traefik 生成</description><content type="html"><![CDATA[<p>来自 <a href="https://blog.cubieserver.de/2021/minimal-traefik-v2-certificate-export/">https://blog.cubieserver.de/2021/minimal-traefik-v2-certificate-export/</a></p>
 <p>目前有很多方式导出证书，docker可以自动化，自己选择吧。</p>
 <ul>
 <li><a href="https://github.com/ldez/traefik-certs-dumper">https://github.com/ldez/traefik-certs-dumper</a> (Go)</li>
