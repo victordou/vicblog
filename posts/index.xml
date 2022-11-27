@@ -40,19 +40,17 @@
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl">uci set wireless.default_radio0.ieee80211k=1
 </span></span><span class="line"><span class="cl">uci set wireless.default_radio0.wnm_sleep_mode=1
 </span></span><span class="line"><span class="cl">uci set wireless.default_radio0.bss_transition=1
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio0.ieee80211r=1
 </span></span><span class="line"><span class="cl">uci set wireless.default_radio0.mobility_domain=8888
 </span></span><span class="line"><span class="cl">uci set wireless.default_radio0.ft_over_ds=0
 </span></span><span class="line"><span class="cl">uci set wireless.default_radio0.ft_psk_generate_local=0
-</span></span><span class="line"><span class="cl">uci set wireless.default_radio0.reassociation_deadline=20000
-</span></span><span class="line"><span class="cl">uci set wireless.default_radio0.max_inactivity=60
 </span></span><span class="line"><span class="cl">uci set wireless.default_radio1.ieee80211k=1
 </span></span><span class="line"><span class="cl">uci set wireless.default_radio1.wnm_sleep_mode=1
 </span></span><span class="line"><span class="cl">uci set wireless.default_radio1.bss_transition=1
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio1.ieee80211r=1
 </span></span><span class="line"><span class="cl">uci set wireless.default_radio1.mobility_domain=8888
 </span></span><span class="line"><span class="cl">uci set wireless.default_radio1.ft_over_ds=0
 </span></span><span class="line"><span class="cl">uci set wireless.default_radio1.ft_psk_generate_local=0
-</span></span><span class="line"><span class="cl">uci set wireless.default_radio1.reassociation_deadline=20000
-</span></span><span class="line"><span class="cl">uci set wireless.default_radio1.max_inactivity=60
 </span></span><span class="line"><span class="cl">uci commit wireless
 </span></span><span class="line"><span class="cl">wifi reload
 </span></span></code></pre></div><p>上面的命令会将下面的参数会写到 <code>/etc/config/wireless</code></p>
@@ -63,8 +61,6 @@
 </span></span><span class="line"><span class="cl">option mobility_domain &#39;8888&#39;
 </span></span><span class="line"><span class="cl">option ft_over_ds &#39;0&#39;
 </span></span><span class="line"><span class="cl">option ft_psk_generate_local &#39;0&#39;
-</span></span><span class="line"><span class="cl">option reassociation_deadline &#39;20000&#39;
-</span></span><span class="line"><span class="cl">option max_inactivity &#39;60&#39;
 </span></span></code></pre></div><p>如果上面参数已经被你改坏掉了，可以删除 <code>/etc/config/wireless</code>，使用 <code>wifi config</code> 重新生成配置。</p>
 <ol>
 <li>
@@ -80,12 +76,13 @@
 </blockquote>
 </li>
 <li>
-<p><a href="https://openwrt.org/docs/guide-user/network/wifi/basic#fast_bss_transition_options_80211r">802.11r</a>, 这个设置官方OpenWrt Luci中包含了这个设置。简单就是说：802.11r <code>打勾</code> -&gt; NAS ID <code>不填</code> -&gt; 移动域/Mobility Domain <code>可以不填</code> -&gt; 重关联截止时间/Reassociation Deadline 填<code>20000</code> -&gt; FT protocol/FT 协议 选<code>FT over the Air</code> -&gt; 本地生成 PMK/Generate PMK locally <code>取消勾</code> -&gt; 剩下所有参数全部默认不修改。</p>
+<p><a href="https://openwrt.org/docs/guide-user/network/wifi/basic#fast_bss_transition_options_80211r">802.11r</a>, 这个设置官方OpenWrt 已经集成到Luci网页里了。</p>
+<p>简单就是说：802.11r <code>打勾</code> -&gt; NAS ID <code>不填</code> -&gt; 移动域/Mobility Domain <code>可以不填</code> -&gt; 重关联截止时间/Reassociation Deadline 填<code>20000</code> -&gt; FT protocol/FT 协议 选<code>FT over the Air</code> -&gt; 本地生成 PMK/Generate PMK locally <code>取消勾</code> -&gt; 剩下所有参数全部默认不修改。</p>
 <blockquote>
 <p>WPA3 必须<code>取消勾</code> 本地生成 PMK/Generate PMK locally，<a href="https://forum.openwrt.org/t/wpa3-with-802-11r-ft-sae-not-working/103583/6">用户问了hostapd的人</a>，必须 <code>option ft_psk_generate_local '0'</code></p>
 </blockquote>
 <blockquote>
-<p>iOS 用户必须将 FT 改为 <a href="https://github.com/openwrt/openwrt/issues/7907">FT over the Air</a>，<code>option ft_over_ds '0'</code>, 这个参数是从Cisco那边抄过来的。</p>
+<p>iOS 用户必须将 FT 改为 <a href="https://github.com/openwrt/openwrt/issues/7907">FT over the Air</a>，<code>option ft_over_ds '0'</code>, 这个参数是从Cisco那边抄过来的，链接里还提到了<code>option reassociation_deadline '20000'</code> <code>option max_inactivity '60'</code> 可以试试加了有没有(副)效果。</p>
 </blockquote>
 <blockquote>
 <p>iOS 提示 <code>hostapd: nl80211: kernel reports: key addition failed</code> 这个错误，<a href="https://forum.openwrt.org/t/802-11r-fast-transition-how-to-understand-that-ft-works/110920/61">OpenWrt开发者提到目前在TODO流程中</a></p>
@@ -151,9 +148,62 @@ Android:</p>
 <p><code>com.vrem.wifianalyzer</code> WiFi Analyzer (open-source), 扫描Wi-Fi的信息，可以看有没有开FT(漫游)。</p>
 <p>iPhone:</p>
 <p><code>com.dayananetworks.networkutilities </code>Network Utilities &amp; Analyzer 功能足够多，但是因为 iPhone 不显示本地设备mac，聊胜于无。</p>
-<p>还有一个工具，不好看，但功能最多。
-<code>net.he.NetworkUtility</code> or <code>net.he.networktools</code> HE.NET Network Tools</p>
-<div class="footnotes" role="doc-endnotes">
+<p>还有一个工具，不好看，但功能最多。</p>
+<p><code>net.he.NetworkUtility</code> or <code>net.he.networktools</code> HE.NET Network Tools</p>
+<h2 id="bonus-openwrt一键ap命令">BONUS: OpenWrt一键AP命令</h2>
+<blockquote>
+<p>懂自己在做什么的，可以一键复制粘贴，不懂的，请一行一行复制粘贴。</p>
+</blockquote>
+<p>打开SSH，路由先联网，设置路由时间。
+安装wpad-wolfssl软件包</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl">opkg update
+</span></span><span class="line"><span class="cl">opkg remove wpad-mini
+</span></span><span class="line"><span class="cl">opkg remove wpad-basic
+</span></span><span class="line"><span class="cl">opkg remove wpad-basic-wolfssl
+</span></span><span class="line"><span class="cl">opkg install wpad-wolfssl
+</span></span></code></pre></div><p>自定义下面脚本，IP地址、Wi-Fi密码等</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl">uci set dhcp.lan.ignore=1
+</span></span><span class="line"><span class="cl">uci set dhcp.lan.dhcpv6=disabled
+</span></span><span class="line"><span class="cl">uci set dhcp.lan.ra=disabled
+</span></span><span class="line"><span class="cl">uci set network.lan.ipaddr=&#39;192.168.44.44&#39;
+</span></span><span class="line"><span class="cl">uci set network.lan.gateway=&#39;192.168.44.1&#39;
+</span></span><span class="line"><span class="cl">uci set network.lan.dns=&#39;192.168.44.1&#39;
+</span></span><span class="line"><span class="cl">uci set network.globals.ula_prefix=&#39;&#39;
+</span></span><span class="line"><span class="cl">uci set wireless.radio0.channel=auto
+</span></span><span class="line"><span class="cl">uci set wireless.radio0.disabled=0
+</span></span><span class="line"><span class="cl">uci set wireless.radio0.country=CN
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio0.ssid=Gargoyle
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio0.encryption=sae-mixed
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio0.key=password
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio0.ieee80211k=1
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio0.wnm_sleep_mode=1
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio0.bss_transition=1
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio0.ieee80211r=1
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio0.mobility_domain=8888
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio0.ft_over_ds=0
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio0.ft_psk_generate_local=0
+</span></span><span class="line"><span class="cl">uci set wireless.radio1.channel=auto
+</span></span><span class="line"><span class="cl">uci set wireless.radio1.disabled=0
+</span></span><span class="line"><span class="cl">uci set wireless.radio1.country=CN
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio1.ssid=Gargoyle
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio1.encryption=sae-mixed
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio1.key=password
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio1.ieee80211k=1
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio1.wnm_sleep_mode=1
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio1.bss_transition=1
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio1.ieee80211r=1
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio1.mobility_domain=8888
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio1.ft_over_ds=0
+</span></span><span class="line"><span class="cl">uci set wireless.default_radio1.ft_psk_generate_local=0
+</span></span><span class="line"><span class="cl">uci set system.@system[0].hostname=Router
+</span></span><span class="line"><span class="cl">uci set system.@system[0].zonename=Asia/Shanghai
+</span></span><span class="line"><span class="cl">uci set system.@system[0].timezone=CST-8
+</span></span><span class="line"><span class="cl">uci commit
+</span></span><span class="line"><span class="cl">/etc/init.d/dnsmasq disable
+</span></span><span class="line"><span class="cl">/etc/init.d/odhcpd disable
+</span></span><span class="line"><span class="cl">/etc/init.d/firewall disable
+</span></span><span class="line"><span class="cl">reboot
+</span></span></code></pre></div><div class="footnotes" role="doc-endnotes">
 <hr>
 <ol>
 <li id="fn:1">
