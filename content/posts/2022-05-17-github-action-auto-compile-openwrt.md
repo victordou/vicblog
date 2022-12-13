@@ -11,7 +11,7 @@ slug: github-action-auto-compile-openwrt
 ---
 
 ## 本次教程基于下列前车之鉴
-<https://github.com/coolsnowwolf/lede>
+<https://github.com/immortalwrt/immortalwrt>
 
 <https://github.com/KFERMercer/OpenWrt-CI>
 
@@ -19,7 +19,7 @@ slug: github-action-auto-compile-openwrt
 本步骤跳过，网上一大堆
 
 ## Fork Openwrt
-<https://github.com/coolsnowwolf/lede/fork>
+<https://github.com/immortalwrt/immortalwrt/fork>
 
 ## 开启Github Action
 1. 进入你 `fork` 成功后的lede/openwrt
@@ -27,26 +27,24 @@ slug: github-action-auto-compile-openwrt
 3. 阅读后打勾，启用 `Action`
 
 ## 准备Workflows配置文件
-1. 打开[KFERMercer OpenWrt-CI.yml](https://github.com/KFERMercer/OpenWrt-CI/blob/master/openwrt-ci.yml)
-2. 复制全部内容
+1. 复制下面的下面的`OpenWrt-CI.yml`全部内容
 
 ## 编辑Workflows配置文件
 1. 返回你的OpenWrt的 `Code` 页面
-2. 依次打开 `.github/workflows/` 文件夹
-3. 打开 `openwrt-ci.yml`
+2. 打开Action页面，会自动新建 `.github/workflows/` 文件夹
+3. 新增或修改 `openwrt-ci.yml`文件
 4. 粘贴你之前复制的.yml内容
-5. 根据你的要求自定义yml的内容
+5. 自定义yml的内容，修改branch: `openwrt-21.02` 或 ``master`
 6. 修改完成 `Start commit` -> `Commit changes`
 
 ## 此时你的 OpenWrt 会自动开始编译
-时长越两小时，下载OpenWrt_firmware即可
+时长越两小时，完成后，去Action页面下载OpenWrt_firmware即可
 
 ## 如何自定义固件
 1. 找到你需要安装的包名，官方<https://openwrt.org/packages/index/start>
-2. Lean/coolsnowwolf 的软件包可以从 make defconfig 配置文件 `.config` 中找到
-3. 添加包到`openwrt-ci.yml` 中 `cat >> .config <<EOF`后面
+2. 软件包可以从 make defconfig 配置文件 `.config` 中找到
+3. 添加包名到`openwrt-ci.yml` 中 `cat >> .config <<EOF`后面
 
-以下删除网易云+迅雷快鸟，并添加一堆自用软件baidupcs, mwan3, ipv6, DOH, Cloudflare DDNS, SMB映射等。
 ```yml
 #
 # This is free software, lisence use MIT.
@@ -62,7 +60,7 @@ name: OpenWrt-CI
 on:
   push:
     branches: 
-      - master
+      - openwrt-21.02
   # schedule:
   #   - cron: 0 20 * * *
   release:
@@ -74,16 +72,16 @@ jobs:
 
     name: Build OpenWrt firmware
 
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
 
     if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
-          ref: master
+          ref: openwrt-21.02
 
       - name: Space cleanup
         env:
@@ -96,21 +94,10 @@ jobs:
           sudo -E apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs gcc-multilib g++-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler antlr3 gperf swig libtinfo5
           sudo -E apt-get -y autoremove --purge
           sudo -E apt-get clean
-
-          # sudo mkdir -p -m 777 /mnt/openwrt/bin /mnt/openwrt/build_dir/host /mnt/openwrt/build_dir/hostpkg /mnt/openwrt/dl /mnt/openwrt/feeds /mnt/openwrt/staging_dir
-          # ln -s /mnt/openwrt/bin ./bin
-          # mkdir -p ./build_dir
-          # ln -s -f /mnt/openwrt/build_dir/host ./build_dir/host
-          # ln -s -f /mnt/openwrt/build_dir/hostpkg ./build_dir/hostpkg
-          # ln -s /mnt/openwrt/dl ./dl
-          # ln -s /mnt/openwrt/feeds ./feeds
-          # ln -s /mnt/openwrt/staging_dir ./staging_dir
-
           df -h
 
       - name: Update feeds
         run: |
-          echo "src-git helloworld https://github.com/fw876/helloworld.git" >> "feeds.conf.default"
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
@@ -124,39 +111,45 @@ jobs:
           # 例如:
 
           cat >> .config <<EOF
+          CONFIG_TARGET_x86=y
+          CONFIG_TARGET_x86_64=y
+          CONFIG_TARGET_x86_64_DEVICE_generic=y
+          # CONFIG_TARGET_ROOTFS_EXT4FS is not set
+          CONFIG_VMDK_IMAGES=y
+          # CONFIG_TARGET_IMAGES_GZIP is not set
           CONFIG_LUCI_LANG_en=y
-          CONFIG_LUCI_LANG_zh-cn=y
-          CONFIG_PACKAGE_luci-app-baidupcs-web=y
-          CONFIG_PACKAGE_luci-app-cifs-mount=y
-          CONFIG_PACKAGE_luci-app-wireguard=y
+          CONFIG_LUCI_LANG_zh_Hans=y
+          CONFIG_PACKAGE_luci=y
+          CONFIG_PACKAGE_ipv6helper=y
+          CONFIG_PACKAGE_zabbix-extra-network=y
+          CONFIG_PACKAGE_luci-app-attendedsysupgrade=y
+          CONFIG_PACKAGE_luci-app-ddns=y
+          CONFIG_PACKAGE_luci-app-firewall=y
           CONFIG_PACKAGE_luci-app-https-dns-proxy=y
-          CONFIG_PACKAGE_luci-app-netdata=y
-          CONFIG_PACKAGE_luci-app-p910nd=y
+          CONFIG_PACKAGE_luci-app-nlbwmon=y
+          CONFIG_PACKAGE_luci-app-sqm=y
           CONFIG_PACKAGE_luci-app-ssr-plus=y
           CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Hysteria=y
-          CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_IPT2Socks=y
           CONFIG_PACKAGE_luci-app-ssr-plus_INCLUDE_Trojan=y
-          CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_DNSFORWARDER=y
-          CONFIG_PACKAGE_luci-app-turboacc_INCLUDE_DNSPROXY=y
-          CONFIG_PACKAGE_luci-app-uugamebooster=y
-          CONFIG_PACKAGE_luci-app-syncdial=y
-          # CONFIG_PACKAGE_luci-app-unblockmusic is not set
-          # CONFIG_PACKAGE_luci-app-ttyd is not set
-          # CONFIG_PACKAGE_luci-app-xlnetacc is not set
-          CONFIG_PACKAGE_luci-theme-argon=y
-          CONFIG_PACKAGE_luci-theme-bootstrap=y
-          CONFIG_PACKAGE_luci-theme-material=y
-          CONFIG_PACKAGE_luci-theme-netgear=y
-          CONFIG_PACKAGE_ddns-scripts_cloudflare.com-v4=y
-          CONFIG_PACKAGE_ddns-scripts_no-ip_com=y
-          CONFIG_PACKAGE_ddns-scripts_route53-v1=y
+          CONFIG_PACKAGE_luci-app-turboacc=y
+          CONFIG_PACKAGE_TURBOACC_INCLUDE_BBR_CCA=y
+          CONFIG_PACKAGE_luci-app-upnp=y
+          CONFIG_PACKAGE_luci-app-vlmcsd=y
+          CONFIG_PACKAGE_luci-app-wireguard=y
+          CONFIG_PACKAGE_luci-app-wol=y
+          CONFIG_PACKAGE_avahi-dbus-daemon=y
+          CONFIG_PACKAGE_avahi-utils=y
           CONFIG_PACKAGE_bind-dig=y
-          CONFIG_PACKAGE_nano=y
-          CONFIG_PACKAGE_qrencode=y
-          CONFIG_PACKAGE_open-vm-tools=y
-          CONFIG_PACKAGE_whois=y
+          CONFIG_PACKAGE_ddns-scripts-cloudflare=y
+          CONFIG_PACKAGE_ddns-scripts-dnspod=y
+          CONFIG_PACKAGE_ddns-scripts_aliyun=y
           CONFIG_PACKAGE_nmap-ssl=y
-          CONFIG_PACKAGE_ipv6helper=y
+          CONFIG_PACKAGE_adguardhome=y
+          CONFIG_PACKAGE_snmpd=y
+          CONFIG_PACKAGE_nano=y
+          CONFIG_PACKAGE_open-vm-tools=y
+          CONFIG_PACKAGE_qrencode=y
+          CONFIG_PACKAGE_whois=y
           EOF
 
           #
@@ -194,19 +187,19 @@ jobs:
           cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
 
       - name: Deliver buildinfo
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: OpenWrt_buildinfo
           path: ./artifact/buildinfo/
 
       - name: Deliver package
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: OpenWrt_package
           path: ./artifact/package/
 
       - name: Deliver firmware
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: OpenWrt_firmware
           path: ./bin/targets/
@@ -237,8 +230,4 @@ on:
 ```
 3. 手动开始编译 `Action` -> `OpenWrt-CI` -> `Run workflow`
 
-## 添加SSR PLUS
-我上面的配置已经添加了[这一段命令](https://github.com/fw876/helloworld)
-```bash
-echo "src-git helloworld https://github.com/fw876/helloworld.git" >> "feeds.conf.default"
-```
+Updated in 2022/12/12

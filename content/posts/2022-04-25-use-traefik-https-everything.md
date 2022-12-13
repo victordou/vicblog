@@ -209,7 +209,7 @@ http:
         - default-headers
 ```
 ## 启动traefik
-> Warning!!! 由于本次使用的是dns来获取证书，请大家关闭openwrt防火墙中的自定义规则（劫持DNS至openwrt），因为有冲突。
+> Warning!!! 获取证书因为需要操作DNS记录，等待生效，需要很长时间，请耐心等待。
 ```bash
 docker-compose up -d
 ```
@@ -229,9 +229,11 @@ docker-compose up -d --force-recreate
 nano /etc/dnsmasq.conf
 ```
 文件末尾填入
-```
+```cmd
 address=/.local.xxx.com/192.168.xx.xx
 ```
+
+新版本OpenWrt可使用 `uci add_list dhcp.@dnsmasq[0].address='/local.xxx.com/192.168.xx.xx'` 来添加，测试无问题，记得 `uci commit`
 
 ## 外部部域名批量解析
 > 记得开启路由器端口8443到你的docker服务器ip地址上
@@ -253,3 +255,5 @@ Cloudflare 新增域名解析到你的路由器DDNS上
       - "traefik.http.services.portainer.loadbalancer.server.port=9000"
       - "traefik.docker.network=proxy"
 ```
+
+Updated in 2022/12/12
