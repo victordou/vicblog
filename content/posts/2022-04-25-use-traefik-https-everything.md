@@ -138,6 +138,7 @@ certificatesResolvers:
           - "223.6.6.6:53"
           - "119.29.29.29:53"
 ```
+>`为什么resolvers不选择OpenWrt DNS？因为 ACME 整个验证时间只有几分钟，他会添加一个 txt项 到你的域名DNS下，经过内部DNS缓存，返回几分钟前的解析结果（也就是更新不能及时给traefik），会导致验证时间超时失败`
 
 #### config.yml其他设备配置
 
@@ -233,7 +234,13 @@ nano /etc/dnsmasq.conf
 address=/.local.xxx.com/192.168.xx.xx
 ```
 
-新版本OpenWrt可使用 `uci add_list dhcp.@dnsmasq[0].address='/local.xxx.com/192.168.xx.xx'` 来添加，测试无问题，记得 `uci commit`
+新版本OpenWrt可使用
+
+```cmd
+uci add_list dhcp.@dnsmasq[0].address='/local.xxx.com/192.168.xx.xx'
+```
+
+来添加，测试无问题，记得 `uci commit`
 
 ## 外部部域名批量解析
 > 记得开启路由器端口8443到你的docker服务器ip地址上

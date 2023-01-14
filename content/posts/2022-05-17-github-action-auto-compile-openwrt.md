@@ -10,41 +10,46 @@ tags:
 slug: github-action-auto-compile-openwrt
 ---
 
-## 本次教程基于下列前车之鉴
-<https://github.com/immortalwrt/immortalwrt>
-
+> 想自己用 Linux 编译 请看这个视频 <https://www.bilibili.com/video/BV1854y1W7fu/>
+### 本次教程基于下列前车之鉴
 <https://github.com/KFERMercer/OpenWrt-CI>
 
-## 注册Github
-本步骤跳过，网上一大堆
 
-## Fork Openwrt
-<https://github.com/immortalwrt/immortalwrt/fork>
+## 注册 Github
+本步骤跳过，网上一大堆，请参考。
 
-## 开启Github Action
-1. 进入你 `fork` 成功后的lede/openwrt
-2. 进入 `Action`
-3. 阅读后打勾，启用 `Action`
+## 1. Fork Openwrt
+打开 <https://github.com/immortalwrt/immortalwrt/fork>
 
-## 准备Workflows配置文件
-1. 复制下面的下面的`OpenWrt-CI.yml`全部内容
+## 2. 修改 ▶️Actions 的 Workflows yml文件
+1. 进入你 `Fork` 后的 `OpenWrt` 页面
+2. 检查当前的 `OpenWrt` 有没有 `.github/workflows` 文件夹
+    > 有 -> 进入`.github/workflows` 修改里面的 `***.yml` 文件
 
-## 编辑Workflows配置文件
-1. 返回你的OpenWrt的 `Code` 页面
-2. 打开Action页面，会自动新建 `.github/workflows/` 文件夹
-3. 新增或修改 `openwrt-ci.yml`文件
-4. 粘贴你之前复制的.yml内容
-5. 自定义yml的内容，修改branch: `openwrt-21.02` 或 ``master`
-6. 修改完成 `Start commit` -> `Commit changes`
+    > 没有 -> 进入 `▶️Actions` 会自动新建 `.github/workflows\main.yml`
+3. 复制我在下文提供的 yml模板，粘贴。
+4. （可选）参考下文进行自定义修改，比如 `加软件` `改平台`
+5. 修改两处 branch 名，从模板的 `openwrt-21.02` 修改为你当前正在编辑 branch，比如 `master` 或 `main`
+6. 修改完成后 `Start commit` -> `Commit changes`
 
-## 此时你的 OpenWrt 会自动开始编译
-时长越两小时，完成后，去Action页面下载OpenWrt_firmware即可
+## 3. 此时你的 OpenWrt 会自动开始编译
+时长约两小时，完成后，去`▶️Actions`页面下载 `OpenWrt_firmware` 即可
 
-## 如何自定义固件
-1. 找到你需要安装的包名，官方<https://openwrt.org/packages/index/start>
-2. 软件包可以从 make defconfig 配置文件 `.config` 中找到
-3. 添加包名到`openwrt-ci.yml` 中 `cat >> .config <<EOF`后面
-
+## 4. 自定义固件
+1. 找到你需要安装的包名，官方软件包大全 <https://openwrt.org/packages/index/start>
+2. 软件包可以从编译环境下 `make defconfig` 生成 `.config` 中找到
+> 比如 # CONFIG_PACKAGE_luci-app-dockerman is not set
+3. 添加包名到`openwrt-ci.yml` 中 `cat >> .config <<EOF`后面，对着我的例子进行修改。
+> 修改为 CONFIG_PACKAGE_luci-app-dockerman=y
+4. 编译其他固件，需要修改 `Target`-> `子Target` -> `设备名` 修改下面三行做例子。
+> 注意要和其他行 `首字母对齐`，错位必编译错误！
+```yml
+          CONFIG_TARGET_ramips=y
+          CONFIG_TARGET_ramips_mt7621=y
+          CONFIG_TARGET_ramips_mt7621_DEVICE_youhua_wr1200js=y
+```
+## 5. 我目前使用的模板
+> 我x86默认编译vmdk给ESXi，你用不到可以删除此行。
 ```yml
 #
 # This is free software, lisence use MIT.
@@ -63,6 +68,7 @@ on:
       - openwrt-21.02
   # schedule:
   #   - cron: 0 20 * * *
+  workflow_dispatch:
   release:
     types: [published]
 
@@ -72,7 +78,7 @@ jobs:
 
     name: Build OpenWrt firmware
 
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-22.04
 
     if: github.event.repository.owner.id == github.event.sender.id
 
@@ -91,13 +97,15 @@ jobs:
           sudo rm -rf /usr/share/dotnet /etc/mysql /etc/php /etc/apt/sources.list.d /usr/local/lib/android
           sudo -E apt-get -y purge azure-cli ghc* zulu* hhvm llvm* firefox google* dotnet* powershell openjdk* adoptopenjdk* mysql* php* mongodb* dotnet* moby* snapd* || true
           sudo -E apt-get update
-          sudo -E apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs gcc-multilib g++-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler antlr3 gperf swig libtinfo5
+          sudo -E apt-get -y install build-essential clang flex g++ gawk gcc-multilib gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev file wget asciidoc binutils bzip2 util-linux help2man intltool libelf-dev make patch perl-modules python3-dev xsltproc qemu-utils
           sudo -E apt-get -y autoremove --purge
           sudo -E apt-get clean
           df -h
 
       - name: Update feeds
         run: |
+          # sed -i 's/#src-git helloworld/src-git helloworld/g' ./feeds.conf.default
+          # echo "src-git helloworld https://github.com/fw876/helloworld.git" >> "feeds.conf.default"
           ./scripts/feeds update -a
           ./scripts/feeds install -a
 
@@ -114,13 +122,10 @@ jobs:
           CONFIG_TARGET_x86=y
           CONFIG_TARGET_x86_64=y
           CONFIG_TARGET_x86_64_DEVICE_generic=y
-          # CONFIG_TARGET_ROOTFS_EXT4FS is not set
           CONFIG_VMDK_IMAGES=y
-          # CONFIG_TARGET_IMAGES_GZIP is not set
           CONFIG_LUCI_LANG_en=y
           CONFIG_LUCI_LANG_zh_Hans=y
           CONFIG_PACKAGE_luci=y
-          CONFIG_PACKAGE_ipv6helper=y
           CONFIG_PACKAGE_zabbix-extra-network=y
           CONFIG_PACKAGE_luci-app-attendedsysupgrade=y
           CONFIG_PACKAGE_luci-app-ddns=y
@@ -145,11 +150,21 @@ jobs:
           CONFIG_PACKAGE_ddns-scripts_aliyun=y
           CONFIG_PACKAGE_nmap-ssl=y
           CONFIG_PACKAGE_adguardhome=y
-          CONFIG_PACKAGE_snmpd=y
+          CONFIG_PACKAGE_curl=y
           CONFIG_PACKAGE_nano=y
           CONFIG_PACKAGE_open-vm-tools=y
           CONFIG_PACKAGE_qrencode=y
           CONFIG_PACKAGE_whois=y
+          CONFIG_PACKAGE_luci-proto-ipv6=y
+          CONFIG_PACKAGE_wget-ssl=y
+          CONFIG_PACKAGE_libip6tc=y
+          CONFIG_PACKAGE_ip6tables=y
+          CONFIG_PACKAGE_ip6tables-mod-nat=y
+          CONFIG_PACKAGE_kmod-ipt-nat6=y
+          CONFIG_PACKAGE_kmod-nf-nat6=y
+          CONFIG_PACKAGE_odhcpd-ipv6only=y
+          CONFIG_PACKAGE_odhcp6c=y
+          CONFIG_PACKAGE_6in4=y
           EOF
 
           #
@@ -213,21 +228,3 @@ jobs:
           tag: ${{ github.ref }}
           file_glob: true
 ```
-
-## 如何手动开始编译，不需要手动commit
-1. 先更新你的OpenWrt源-> `Fetch upstream` -> `Fetch Merge`
-2. 修改 `openwrt-ci.yml`
-```yml
-on:
-  push:
-    branches: 
-      - master
-```
-改成
-```yml
-on:
-  workflow_dispatch:
-```
-3. 手动开始编译 `Action` -> `OpenWrt-CI` -> `Run workflow`
-
-Updated in 2022/12/12
