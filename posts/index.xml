@@ -305,40 +305,71 @@ Android:</p>
 <li>文本编辑器保存解码结果为 cert.crt</li>
 <li>key同理，保存为 cert.key</li>
 </ol>
-]]></content></item><item><title>利用 Github Action 自动编译OpenWrt</title><link>https://vicfree.com/2022/05/github-action-auto-compile-openwrt/</link><pubDate>Tue, 17 May 2022 15:21:34 +0800</pubDate><guid>https://vicfree.com/2022/05/github-action-auto-compile-openwrt/</guid><description>本次教程基于下列前车之鉴 https://github.com/immortalwrt/immortalwrt https://github.com/KFERMercer/OpenWrt-CI 注册Github 本步骤跳过，网上一大堆 Fork Openwrt https://github.com/immortalwrt/immortalwrt/fork 开启Github Action 进入你 fork 成功后的lede/openwrt 进入 Action 阅读</description><content type="html"><![CDATA[<h2 id="本次教程基于下列前车之鉴">本次教程基于下列前车之鉴</h2>
-<p><a href="https://github.com/immortalwrt/immortalwrt">https://github.com/immortalwrt/immortalwrt</a></p>
+]]></content></item><item><title>利用 Github Action 自动编译OpenWrt</title><link>https://vicfree.com/2022/05/github-action-auto-compile-openwrt/</link><pubDate>Tue, 17 May 2022 15:21:34 +0800</pubDate><guid>https://vicfree.com/2022/05/github-action-auto-compile-openwrt/</guid><description>想自己用 Linux 编译 请看这个视频 https://www.bilibili.com/video/BV1854y1W7fu/ 本次教程基于下列前车之鉴 https://github.com/KFERMercer/OpenWrt-CI 注册 Github 本步骤跳过，网上一大堆，请参考。 1. Fork Openwrt 打开 https://github.com/immortalwrt/immortalwrt/fork 2. 修改 ▶️Actions 的 Workflows yml文</description><content type="html"><![CDATA[<blockquote>
+<p>想自己用 Linux 编译 请看这个视频 <a href="https://www.bilibili.com/video/BV1854y1W7fu/">https://www.bilibili.com/video/BV1854y1W7fu/</a></p>
+</blockquote>
+<h3 id="本次教程基于下列前车之鉴">本次教程基于下列前车之鉴</h3>
 <p><a href="https://github.com/KFERMercer/OpenWrt-CI">https://github.com/KFERMercer/OpenWrt-CI</a></p>
-<h2 id="注册github">注册Github</h2>
-<p>本步骤跳过，网上一大堆</p>
-<h2 id="fork-openwrt">Fork Openwrt</h2>
-<p><a href="https://github.com/immortalwrt/immortalwrt/fork">https://github.com/immortalwrt/immortalwrt/fork</a></p>
-<h2 id="开启github-action">开启Github Action</h2>
+<h2 id="注册-github">注册 Github</h2>
+<p>本步骤跳过，网上一大堆，请参考。</p>
+<h2 id="1-fork-openwrt">1. Fork Openwrt</h2>
+<p>打开 <a href="https://github.com/immortalwrt/immortalwrt/fork">https://github.com/immortalwrt/immortalwrt/fork</a></p>
+<h2 id="2-修改-actions-的-workflows-yml文件">2. 修改 ▶️Actions 的 Workflows yml文件</h2>
 <ol>
-<li>进入你 <code>fork</code> 成功后的lede/openwrt</li>
-<li>进入 <code>Action</code></li>
-<li>阅读后打勾，启用 <code>Action</code></li>
+<li>
+<p>进入你 <code>Fork</code> 后的 <code>OpenWrt</code> 页面</p>
+</li>
+<li>
+<p>检查当前的 <code>OpenWrt</code> 有没有 <code>.github/workflows</code> 文件夹</p>
+<blockquote>
+<p>有 -&gt; 进入<code>.github/workflows</code> 修改里面的 <code>***.yml</code> 文件</p>
+</blockquote>
+<blockquote>
+<p>没有 -&gt; 进入 <code>▶️Actions</code> 会自动新建 <code>.github/workflows\main.yml</code></p>
+</blockquote>
+</li>
+<li>
+<p>复制我在下文提供的 yml模板，粘贴。</p>
+</li>
+<li>
+<p>（可选）参考下文进行自定义修改，比如 <code>加软件</code> <code>改平台</code></p>
+</li>
+<li>
+<p>修改两处 branch 名，从模板的 <code>openwrt-21.02</code> 修改为你当前正在编辑 branch，比如 <code>master</code> 或 <code>main</code></p>
+</li>
+<li>
+<p>修改完成后 <code>Start commit</code> -&gt; <code>Commit changes</code></p>
+</li>
 </ol>
-<h2 id="准备workflows配置文件">准备Workflows配置文件</h2>
+<h2 id="3-此时你的-openwrt-会自动开始编译">3. 此时你的 OpenWrt 会自动开始编译</h2>
+<p>时长约两小时，完成后，去<code>▶️Actions</code>页面下载 <code>OpenWrt_firmware</code> 即可</p>
+<h2 id="4-自定义固件">4. 自定义固件</h2>
 <ol>
-<li>复制下面的下面的<code>OpenWrt-CI.yml</code>全部内容</li>
+<li>找到你需要安装的包名，官方软件包大全 <a href="https://openwrt.org/packages/index/start">https://openwrt.org/packages/index/start</a></li>
+<li>软件包可以从编译环境下 <code>make defconfig</code> 生成 <code>.config</code> 中找到</li>
 </ol>
-<h2 id="编辑workflows配置文件">编辑Workflows配置文件</h2>
-<ol>
-<li>返回你的OpenWrt的 <code>Code</code> 页面</li>
-<li>打开Action页面，会自动新建 <code>.github/workflows/</code> 文件夹</li>
-<li>新增或修改 <code>openwrt-ci.yml</code>文件</li>
-<li>粘贴你之前复制的.yml内容</li>
-<li>自定义yml的内容，修改branch: <code>openwrt-21.02</code> 或 ``master`</li>
-<li>修改完成 <code>Start commit</code> -&gt; <code>Commit changes</code></li>
+<blockquote>
+<p>比如 # CONFIG_PACKAGE_luci-app-dockerman is not set</p>
+</blockquote>
+<ol start="3">
+<li>添加包名到<code>openwrt-ci.yml</code> 中 <code>cat &gt;&gt; .config &lt;&lt;EOF</code>后面，对着我的例子进行修改。</li>
 </ol>
-<h2 id="此时你的-openwrt-会自动开始编译">此时你的 OpenWrt 会自动开始编译</h2>
-<p>时长越两小时，完成后，去Action页面下载OpenWrt_firmware即可</p>
-<h2 id="如何自定义固件">如何自定义固件</h2>
-<ol>
-<li>找到你需要安装的包名，官方<a href="https://openwrt.org/packages/index/start">https://openwrt.org/packages/index/start</a></li>
-<li>软件包可以从 make defconfig 配置文件 <code>.config</code> 中找到</li>
-<li>添加包名到<code>openwrt-ci.yml</code> 中 <code>cat &gt;&gt; .config &lt;&lt;EOF</code>后面</li>
+<blockquote>
+<p>修改为 CONFIG_PACKAGE_luci-app-dockerman=y</p>
+</blockquote>
+<ol start="4">
+<li>编译其他固件，需要修改 <code>Target</code>-&gt; <code>子Target</code> -&gt; <code>设备名</code> 修改下面三行做例子。</li>
 </ol>
+<blockquote>
+<p>注意要和其他行 <code>首字母对齐</code>，错位必编译错误！</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yml" data-lang="yml"><span class="line"><span class="cl"><span class="w">          </span><span class="l">CONFIG_TARGET_ramips=y</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="l">CONFIG_TARGET_ramips_mt7621=y</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="l">CONFIG_TARGET_ramips_mt7621_DEVICE_youhua_wr1200js=y</span><span class="w">
+</span></span></span></code></pre></div><h2 id="5-我目前使用的模板">5. 我目前使用的模板</h2>
+<blockquote>
+<p>我x86默认编译vmdk给ESXi，你用不到可以删除此行。</p>
+</blockquote>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yml" data-lang="yml"><span class="line"><span class="cl"><span class="c">#</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c"># This is free software, lisence use MIT.</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"></span><span class="c"># </span><span class="w">
@@ -356,6 +387,7 @@ Android:</p>
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="l">openwrt-21.02</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="c"># schedule:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="c">#   - cron: 0 20 * * *</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">workflow_dispatch</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">release</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">types</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="l">published]</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
@@ -365,7 +397,7 @@ Android:</p>
 </span></span></span><span class="line"><span class="cl"><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Build OpenWrt firmware</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l">ubuntu-20.04</span><span class="w">
+</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l">ubuntu-22.04</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">if</span><span class="p">:</span><span class="w"> </span><span class="l">github.event.repository.owner.id == github.event.sender.id</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">
@@ -384,13 +416,15 @@ Android:</p>
 </span></span></span><span class="line"><span class="cl"><span class="sd">          sudo rm -rf /usr/share/dotnet /etc/mysql /etc/php /etc/apt/sources.list.d /usr/local/lib/android
 </span></span></span><span class="line"><span class="cl"><span class="sd">          sudo -E apt-get -y purge azure-cli ghc* zulu* hhvm llvm* firefox google* dotnet* powershell openjdk* adoptopenjdk* mysql* php* mongodb* dotnet* moby* snapd* || true
 </span></span></span><span class="line"><span class="cl"><span class="sd">          sudo -E apt-get update
-</span></span></span><span class="line"><span class="cl"><span class="sd">          sudo -E apt-get -y install build-essential asciidoc binutils bzip2 gawk gettext git libncurses5-dev libz-dev patch python3 unzip zlib1g-dev lib32gcc1 libc6-dev-i386 subversion flex uglifyjs gcc-multilib g++-multilib p7zip p7zip-full msmtp libssl-dev texinfo libglib2.0-dev xmlto qemu-utils upx libelf-dev autoconf automake libtool autopoint device-tree-compiler antlr3 gperf swig libtinfo5
+</span></span></span><span class="line"><span class="cl"><span class="sd">          sudo -E apt-get -y install build-essential clang flex g++ gawk gcc-multilib gettext git libncurses5-dev libssl-dev python3-distutils rsync unzip zlib1g-dev file wget asciidoc binutils bzip2 util-linux help2man intltool libelf-dev make patch perl-modules python3-dev xsltproc qemu-utils
 </span></span></span><span class="line"><span class="cl"><span class="sd">          sudo -E apt-get -y autoremove --purge
 </span></span></span><span class="line"><span class="cl"><span class="sd">          sudo -E apt-get clean
 </span></span></span><span class="line"><span class="cl"><span class="sd">          df -h</span><span class="w">          
 </span></span></span><span class="line"><span class="cl"><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l">Update feeds</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p">|</span><span class="sd">
+</span></span></span><span class="line"><span class="cl"><span class="sd">          # sed -i &#39;s/#src-git helloworld/src-git helloworld/g&#39; ./feeds.conf.default
+</span></span></span><span class="line"><span class="cl"><span class="sd">          # echo &#34;src-git helloworld https://github.com/fw876/helloworld.git&#34; &gt;&gt; &#34;feeds.conf.default&#34;
 </span></span></span><span class="line"><span class="cl"><span class="sd">          ./scripts/feeds update -a
 </span></span></span><span class="line"><span class="cl"><span class="sd">          ./scripts/feeds install -a</span><span class="w">          
 </span></span></span><span class="line"><span class="cl"><span class="w">
@@ -407,13 +441,10 @@ Android:</p>
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_TARGET_x86=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_TARGET_x86_64=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_TARGET_x86_64_DEVICE_generic=y
-</span></span></span><span class="line"><span class="cl"><span class="sd">          # CONFIG_TARGET_ROOTFS_EXT4FS is not set
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_VMDK_IMAGES=y
-</span></span></span><span class="line"><span class="cl"><span class="sd">          # CONFIG_TARGET_IMAGES_GZIP is not set
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_LUCI_LANG_en=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_LUCI_LANG_zh_Hans=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_luci=y
-</span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_ipv6helper=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_zabbix-extra-network=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_luci-app-attendedsysupgrade=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_luci-app-ddns=y
@@ -438,11 +469,21 @@ Android:</p>
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_ddns-scripts_aliyun=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_nmap-ssl=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_adguardhome=y
-</span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_snmpd=y
+</span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_curl=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_nano=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_open-vm-tools=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_qrencode=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_whois=y
+</span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_luci-proto-ipv6=y
+</span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_wget-ssl=y
+</span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_libip6tc=y
+</span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_ip6tables=y
+</span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_ip6tables-mod-nat=y
+</span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_kmod-ipt-nat6=y
+</span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_kmod-nf-nat6=y
+</span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_odhcpd-ipv6only=y
+</span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_odhcp6c=y
+</span></span></span><span class="line"><span class="cl"><span class="sd">          CONFIG_PACKAGE_6in4=y
 </span></span></span><span class="line"><span class="cl"><span class="sd">          EOF
 </span></span></span><span class="line"><span class="cl"><span class="sd">
 </span></span></span><span class="line"><span class="cl"><span class="sd">          #
@@ -505,23 +546,7 @@ Android:</p>
 </span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">file</span><span class="p">:</span><span class="w"> </span><span class="l">./artifact/firmware/*</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">tag</span><span class="p">:</span><span class="w"> </span><span class="l">${{ github.ref }}</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">          </span><span class="nt">file_glob</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
-</span></span></span></code></pre></div><h2 id="如何手动开始编译不需要手动commit">如何手动开始编译，不需要手动commit</h2>
-<ol>
-<li>先更新你的OpenWrt源-&gt; <code>Fetch upstream</code> -&gt; <code>Fetch Merge</code></li>
-<li>修改 <code>openwrt-ci.yml</code></li>
-</ol>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yml" data-lang="yml"><span class="line"><span class="cl"><span class="nt">on</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">push</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">    </span><span class="nt">branches</span><span class="p">:</span><span class="w"> 
-</span></span></span><span class="line"><span class="cl"><span class="w">      </span>- <span class="l">master</span><span class="w">
-</span></span></span></code></pre></div><p>改成</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yml" data-lang="yml"><span class="line"><span class="cl"><span class="nt">on</span><span class="p">:</span><span class="w">
-</span></span></span><span class="line"><span class="cl"><span class="w">  </span><span class="nt">workflow_dispatch</span><span class="p">:</span><span class="w">
-</span></span></span></code></pre></div><ol start="3">
-<li>手动开始编译 <code>Action</code> -&gt; <code>OpenWrt-CI</code> -&gt; <code>Run workflow</code></li>
-</ol>
-<p>Updated in 2022/12/12</p>
-]]></content></item><item><title>一键安装 Sonarr Radarr Jackett 追剧一条龙</title><link>https://vicfree.com/2022/04/install-sonarr-radarr-jackett-with-docker-compose/</link><pubDate>Tue, 26 Apr 2022 00:18:41 +0800</pubDate><guid>https://vicfree.com/2022/04/install-sonarr-radarr-jackett-with-docker-compose/</guid><description>感谢原po, 我就基本照着抄就是了。 准备已安装 Docker, docker-compose 的服务器 偷懒下，安装教程引用Techno Tim + 官方教程，脚本复制粘贴完事。 开搞 按下面操作新建文</description><content type="html"><![CDATA[<p><a href="https://nubcakes.net/index.php/2019/04/03/how-to-install-sonarr-radarr-and-jackett-with-docker-compose/">感谢原po</a>, 我就基本照着抄就是了。</p>
+</span></span></span></code></pre></div>]]></content></item><item><title>一键安装 Sonarr Radarr Jackett 追剧一条龙</title><link>https://vicfree.com/2022/04/install-sonarr-radarr-jackett-with-docker-compose/</link><pubDate>Tue, 26 Apr 2022 00:18:41 +0800</pubDate><guid>https://vicfree.com/2022/04/install-sonarr-radarr-jackett-with-docker-compose/</guid><description>感谢原po, 我就基本照着抄就是了。 准备已安装 Docker, docker-compose 的服务器 偷懒下，安装教程引用Techno Tim + 官方教程，脚本复制粘贴完事。 开搞 按下面操作新建文</description><content type="html"><![CDATA[<p><a href="https://nubcakes.net/index.php/2019/04/03/how-to-install-sonarr-radarr-and-jackett-with-docker-compose/">感谢原po</a>, 我就基本照着抄就是了。</p>
 <h2 id="准备已安装-docker-docker-compose-的服务器">准备已安装 Docker, docker-compose 的服务器</h2>
 <p>偷懒下，安装教程引用<a href="https://docs.technotim.live/posts/docker-compose-install">Techno Tim</a> + <a href="https://docs.docker.com/engine/install/">官方教程</a>，脚本复制粘贴完事。</p>
 <h2 id="开搞">开搞</h2>
@@ -720,7 +745,10 @@ Android:</p>
 </span></span></span><span class="line"><span class="cl"><span class="w">        </span><span class="nt">resolvers</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">          </span>- <span class="s2">&#34;223.6.6.6:53&#34;</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w">          </span>- <span class="s2">&#34;119.29.29.29:53&#34;</span><span class="w">
-</span></span></span></code></pre></div><h4 id="configyml其他设备配置">config.yml其他设备配置</h4>
+</span></span></span></code></pre></div><blockquote>
+<p><code>为什么resolvers不选择OpenWrt DNS？因为 ACME 整个验证时间只有几分钟，他会添加一个 txt项 到你的域名DNS下，经过内部DNS缓存，返回几分钟前的解析结果（也就是更新不能及时给traefik），会导致验证时间超时失败</code></p>
+</blockquote>
+<h4 id="configyml其他设备配置">config.yml其他设备配置</h4>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">nano data/config.yml
 </span></span></code></pre></div><div class="highlight"><pre tabindex="0" class="chroma"><code class="language-yml" data-lang="yml"><span class="line"><span class="cl"><span class="nt">http</span><span class="p">:</span><span class="w">
 </span></span></span><span class="line"><span class="cl"><span class="w"> </span><span class="c">#region routers </span><span class="w">
@@ -799,7 +827,9 @@ Android:</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">nano /etc/dnsmasq.conf
 </span></span></code></pre></div><p>文件末尾填入</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl">address=/.local.xxx.com/192.168.xx.xx
-</span></span></code></pre></div><p>新版本OpenWrt可使用 <code>uci add_list dhcp.@dnsmasq[0].address='/local.xxx.com/192.168.xx.xx'</code> 来添加，测试无问题，记得 <code>uci commit</code></p>
+</span></span></code></pre></div><p>新版本OpenWrt可使用</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-cmd" data-lang="cmd"><span class="line"><span class="cl">uci add_list dhcp.@dnsmasq[0].address=&#39;/local.xxx.com/192.168.xx.xx&#39;
+</span></span></code></pre></div><p>来添加，测试无问题，记得 <code>uci commit</code></p>
 <h2 id="外部部域名批量解析">外部部域名批量解析</h2>
 <blockquote>
 <p>记得开启路由器端口8443到你的docker服务器ip地址上
