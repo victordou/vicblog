@@ -286,12 +286,34 @@
 <p><code>option ieee80211v '1'</code> 是多余的设置已被<a href="https://github.com/openwrt/openwrt/commit/b518f07d4b8ae144453c606c9ec4ecef7d39f968">弃用</a></p>
 </blockquote>
 <blockquote>
-<p>802.11v 还有另外一个设置， time_advertisement/广播同步时间，好像就是字面意思，无线数据包中包含时区信息，我也不清楚，<a href="https://www.mail-archive.com/openwrt-devel@lists.openwrt.org/msg60773.html">OpenWrt邮件</a>是这么说的，我觉得没啥用，不启用了。</p>
+<p><code>wnm_sleep_mode</code> WiFi 客户端待机睡眠模式</p>
+</blockquote>
+<blockquote>
+<p><code>bss_transition</code> AP 会发生指令给 WiFi 客户端，推荐最佳信号的 AP 供链接，但是客户端连不连，AP 就管不到了。</p>
+</blockquote>
+<blockquote>
+<p><code>time_advertisement</code> 广播同步时间，好像就是字面意思，无线数据包中包含时区信息，我也不清楚，<a href="https://www.mail-archive.com/openwrt-devel@lists.openwrt.org/msg60773.html">OpenWrt邮件</a>是这么说的，我觉得没啥用，不启用了。</p>
 </blockquote>
 </li>
 <li>
 <p><a href="https://openwrt.org/docs/guide-user/network/wifi/basic#fast_bss_transition_options_80211r">802.11r</a>, 这个设置官方OpenWrt 已经集成到Luci网页里了。</p>
-<p>简单就是说：802.11r <code>打勾</code> -&gt; NAS ID <code>不填</code> -&gt; 移动域/Mobility Domain <code>可以不填</code> -&gt; 重关联截止时间/Reassociation Deadline 填<code>20000</code> -&gt; FT protocol/FT 协议 选<code>FT over the Air</code> -&gt; 本地生成 PMK/Generate PMK locally <code>取消勾</code> -&gt; 剩下所有参数全部默认不修改。</p>
+</li>
+</ol>
+<blockquote>
+<p>重要：开了802.11r，部分设备会不兼容 WPA3 或者 WPA3-mixed，可能和系统版本无关，也可能无关，没有太多的数据，没办法找出规律，可以参考<a href="https://github.com/openwrt/openwrt/issues/7858">官方OpenWrt issue</a>。</p>
+</blockquote>
+<ul>
+<li>
+<p>进入WEBUI，按照下面进行修改</p>
+<ul>
+<li>802.11r <code>打勾</code></li>
+<li>NAS ID <code>不填</code></li>
+<li>移动域/Mobility Domain <code>可以不填</code></li>
+<li>重关联截止时间/Reassociation Deadline 填<code>20000</code></li>
+<li>FT protocol/FT 协议 选<code>FT over the Air</code></li>
+<li>本地生成 PMK/Generate PMK locally <code>取消勾</code></li>
+<li>剩下所有参数全部默认不修改。</li>
+</ul>
 <blockquote>
 <p>WPA3 必须<code>取消勾</code> 本地生成 PMK/Generate PMK locally，<a href="https://forum.openwrt.org/t/wpa3-with-802-11r-ft-sae-not-working/103583/6">用户问了hostapd的人</a>，必须 <code>option ft_psk_generate_local '0'</code></p>
 </blockquote>
@@ -323,7 +345,7 @@
 </span></span><span class="line"><span class="cl">        option ieee80211v &#39;1&#39;
 </span></span><span class="line"><span class="cl">        option disassoc_low_ack &#39;0&#39;
 </span></span></code></pre></div></li>
-</ol>
+</ul>
 <h2 id="测试能否成功漫游">测试能否成功漫游</h2>
 <p>一般来说拿个iPhone，在两个AP直接来回晃悠就行了。
 晃悠完了，来到 AP 看日志。</p>
