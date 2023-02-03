@@ -36,7 +36,7 @@ disqusShortname = "vicfree"
   # images = [""]
   themeColor = "#494f5c"
 
-  homeSubtitle = "知识(折腾) 分享"
+  homeSubtitle = "经验(折腾) 分享"
   footerCopyright = ' &#183; <a href="https://creativecommons.org/licenses/by-nc/4.0/" target="_blank" rel="noopener">CC BY-NC 4.0</a>'
   bgImg = "nobot/bg.jpg"  # Homepage background-image URL
 
