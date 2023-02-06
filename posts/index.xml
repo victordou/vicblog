@@ -44,22 +44,28 @@
 <tbody>
 <tr>
 <td>::1/128</td>
-<td>Loopback 地址 (localhost) 类似 127.0.0.1</td>
+<td>Loopback/本机回环地址（就是localhost，类似 127.0.0.1）</td>
 </tr>
 <tr>
 <td>fe80::/10</td>
-<td>Link-Local Unicast (同冲突域，相同交换机下的地址)</td>
+<td>Link-Local/链路本地地址 （同交换机下的地址，不能转发到其他局域网，类似 169.254.0.0/16)</td>
 </tr>
 <tr>
 <td>fc00::/7</td>
-<td>Unique-local (本地局域网地址，类似192.168.0.0/24)</td>
+<td>Unique-Local/唯一区域地址 (大局域网地址，不能转发到公网，类似 192.168.0.0/16)</td>
 </tr>
 <tr>
 <td>2000::/3</td>
-<td>GLOBAL unicast (互联网地址，就是公网 IP)</td>
+<td>Global-Unicast/全球单播 (互联网地址，就是公网 IP)</td>
 </tr>
 </tbody>
 </table>
+<blockquote>
+<p>IANA维护官方的 IPv6 地址列表 <a href="https://www.iana.org/assignments/ipv6-address-space/ipv6-address-space.xhtml">https://www.iana.org/assignments/ipv6-address-space/ipv6-address-space.xhtml</a> 或者 <a href="https://en.wikipedia.org/wiki/Reserved_IP_addresses">https://en.wikipedia.org/wiki/Reserved_IP_addresses</a></p>
+</blockquote>
+<blockquote>
+<p>现实中 Link-Local/链路本地地址 <code>fe80::/10</code> 被使用的只有 <code>fe80::/64</code> 这一段，只要你启用了 IPv6，网口会自动根据 MAC地址 自动生成 IPv6地址，和 IPv4 的 <code>169.254.0.0/16</code> 只在没有 DHCP 时才会生成的情况不一样。</p>
+</blockquote>
 <ul>
 <li>
 <p>每个 IPv6 地址都有 Scope，OpenWrt 可以通过 ssh 内输入 <code>ip a</code> 来查看对应 IPv6 的 Scope.</p>
@@ -128,7 +134,7 @@
 </blockquote>
 <ul>
 <li>
-<p>什么是 Unique-Local 地址，类似本地局域网地址 如 192.168.0.0/24，供内部局域网使用，没有 IPv6 公网的人可以打开，有 IPv6 公网就可以关掉了。</p>
+<p>什么是 Unique-Local 地址，类似本地局域网地址 如 192.168.0.0/16，供内部局域网使用，没有 IPv6 公网的人可以打开，有 IPv6 公网就可以关掉了。</p>
 <ul>
 <li>进入<code>OpenWrt</code> - <code>Network/网络</code> - <code>Interfaces/接口</code> - <code>Global network options/全局网络选项</code></li>
 <li><code>IPv6 ULA-Prefix/IPv6 ULA 前缀</code>，这里可以填写任意 fc00::/7 地址内 最大 FDFF 的地址，<a href="https://www.tunnelsup.com/subnet-calculator/">subnet子网计算器</a></li>
