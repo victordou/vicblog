@@ -42,10 +42,14 @@ slug: ipv6-explained-and-setup-in-openwrt
 
 | 范围 | 含义 |
 | -- | -- |
-| ::1/128 | Loopback 地址 (localhost) 类似 127.0.0.1 |
-| fe80::/10 | Link-Local Unicast (同冲突域，相同交换机下的地址) |
-| fc00::/7 | Unique-local (本地局域网地址，类似192.168.0.0/24) |
-| 2000::/3 | GLOBAL unicast (互联网地址，就是公网 IP) |
+| ::1/128 | Loopback/本机回环地址（就是localhost，类似 127.0.0.1） |
+| fe80::/10 | Link-Local/链路本地地址 （同交换机下的地址，不能转发到其他局域网，类似 169.254.0.0/16) |
+| fc00::/7 | Unique-Local/唯一区域地址 (大局域网地址，不能转发到公网，类似 192.168.0.0/16) |
+| 2000::/3 | Global-Unicast/全球单播 (互联网地址，就是公网 IP) |
+
+> IANA维护官方的 IPv6 地址列表 <https://www.iana.org/assignments/ipv6-address-space/ipv6-address-space.xhtml> 或者 <https://en.wikipedia.org/wiki/Reserved_IP_addresses>
+
+> 现实中 Link-Local/链路本地地址 `fe80::/10` 被使用的只有 `fe80::/64` 这一段，只要你启用了 IPv6，网口会自动根据 MAC地址 自动生成 IPv6地址，和 IPv4 的 `169.254.0.0/16` 只在没有 DHCP 时才会生成的情况不一样。
 
 - 每个 IPv6 地址都有 Scope，OpenWrt 可以通过 ssh 内输入 `ip a` 来查看对应 IPv6 的 Scope.
     + scope host
@@ -82,7 +86,7 @@ slug: ipv6-explained-and-setup-in-openwrt
 
 > 因为默认 IPv6 全部都是公网，没有 NAT地址 转换，所以要记住 IPv6 地址流动方向是从 `WAN` -> `LAN` -> `二级路由 WAN` -> `二级路由 LAN`，为了让下级端口获取 `Prefix Delegated/PD`，或 `DHCPv6 Relay`，那么上级的端口就需要开启 `Delegate IPv6 prefixes/委托 IPv6 前缀` 或 `Relay/中继`
 
-+ 什么是 Unique-Local 地址，类似本地局域网地址 如 192.168.0.0/24，供内部局域网使用，没有 IPv6 公网的人可以打开，有 IPv6 公网就可以关掉了。
++ 什么是 Unique-Local 地址，类似本地局域网地址 如 192.168.0.0/16，供内部局域网使用，没有 IPv6 公网的人可以打开，有 IPv6 公网就可以关掉了。
     - 进入`OpenWrt` - `Network/网络` - `Interfaces/接口` - `Global network options/全局网络选项`
     - `IPv6 ULA-Prefix/IPv6 ULA 前缀`，这里可以填写任意 fc00::/7 地址内 最大 FDFF 的地址，[subnet子网计算器](https://www.tunnelsup.com/subnet-calculator/)
 
