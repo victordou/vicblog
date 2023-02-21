@@ -1,7 +1,7 @@
 ---
 title: "Windows 安装 Zsh in Git Bash"
 date: 2023-02-20T22:17:36+08:00
-draft: true
+draft: false
 toc: false
 images:
 tags: 
@@ -26,9 +26,9 @@ PowerShell 自带的那些命令，真的是难记，也用 Scoop 安装过 [Oh 
 
 然后发现网上 Windows 安装 Zsh, 要么是 WSL, 要么是 [MSYS2](https://www.msys2.org/), WSL 访问本地文件还是有点繁琐```cd /mnt/c/Users/```, MSYS2 需要安装 Zsh 插件 ```pacman -S zsh git vim```, 最后一个办法就是本文想介绍的。
 
+![img](/images/Zsh.png "Zsh Shell")
 
 ### 安装 Git Bash 和 Zsh
-Git Bash(Git For Windows) 是基于 MSYS2 MINGW64 环境的，所以我们只要手动下载 MSYS2 的 Zsh 插件手动解压到 Git 目录即可。
 
 1. 下载 `Git For Windows`, 从下面选择适合你的:
     * [Scoop](https://scoop.sh/) ```scoop install git```
@@ -39,7 +39,8 @@ Git Bash(Git For Windows) 是基于 MSYS2 MINGW64 环境的，所以我们只要
     * 打开 <https://packages.msys2.org/package/zsh?repo=msys&variant=x86_64>
     * 点击下载 File: <https://mirror.msys2.org/msys/x86_64/zsh-5.9-2-x86_64.pkg.tar.zst>
 
-3. 将 `*.tar.zst` 解压缩成 `*.tar`, 这样可以用任意压缩软件打开 `*.tar`. 解压有了两个办法：
+    > Git Bash(Git For Windows) 是基于 MSYS2 MINGW64 环境的，所以我们只要手动下载 MSYS2 的 Zsh 插件手动解压到 Git 目录即可。
+3. 将 `*.tar.zst` 解压缩成 `*.tar`, 这样可以用任意压缩软件打开 `*.tar`. 有下面两个办法：
     * 下载 Windows 解压工具 [PeaZip](https://peazip.github.io/) 或者 [7-Zip 插件](https://github.com/mcmilk/7-Zip-zstd/releases)
     * WSL 安装 ztsd 解压，`sudo apt update && sudo apt install zstd -y` 然后 `unzstd filename.tar.zst`
 
@@ -47,7 +48,7 @@ Git Bash(Git For Windows) 是基于 MSYS2 MINGW64 环境的，所以我们只要
     * `%USERPROFILE%\scoop\apps\git\current\`
     * `C:\Program Files\Git\`
 
-5. 打开 Git Bash 运行
+5. 打开 Git Bash 运行 `Zsh`
     ```bash
     zsh
     ```
@@ -61,7 +62,11 @@ Git Bash(Git For Windows) 是基于 MSYS2 MINGW64 环境的，所以我们只要
     * 按 `1` 配置命令历史，按 `1-3` 来修改命令历史大小和位置，按 `0` 返回。
     * 按 `2` 配置补全，按 `1` 选择 "Use the new completion system", 有提示等待确认就按`回车`，按 `0` 返回，再次提示是否保存按 `y`
     * 按 `0` 保存，完成
-7. 将 `Zsh` 设置为默认 Shell, 新建 `.profile` 到你的用户文件夹 `%USERPROFILE%`, 在 `Git Bash` 输入`nano ~/.profile`, 粘贴下面的内容，`Crtl+S` 保存，再次打开 `Git Bash`就是 `Zsh` 了。
+7. `Zsh` 设置为默认的 Shell, 
+    * `Git Bash` 输入`nano ~/.profile`, 会新建 `.profile` 到你的用户文件夹 `%USERPROFILE%` 下
+    * 粘贴下面的内容，`Crtl+S` 保存，再次打开 `Git Bash`就是 `Zsh` 了。
+
+    > 下面命令随意可以添加到 `.profile` > `.bash_profile` > `.bashrc` 任一文件下，在 `Zsh` 内输入 `bash` 打开 `Git Bash`
 
     ```bash
     if [ -t 1 ]; then
@@ -70,7 +75,7 @@ Git Bash(Git For Windows) 是基于 MSYS2 MINGW64 环境的，所以我们只要
     ```
 ### 安装Zsh插件
 
-1. 先 clone 所有库，到你电脑本地磁盘上，如用户文件夹`%USERPROFILE%`
+1. 先 clone 所有库，到你电脑本地磁盘上，如用户文件夹 `%USERPROFILE%`
 
     ```bash
     git clone https://github.com/zsh-users/zsh-completions
@@ -86,16 +91,15 @@ Git Bash(Git For Windows) 是基于 MSYS2 MINGW64 环境的，所以我们只要
     ```
 3. **如果自定义了 `Git Clone` 目录，自己修改上面的路径，比如 `/c/Users/xxxx/xxxx`
 
-### 自定义`.zshrc`，添加 Git Branch.
+### 自定义`.zshrc`，并添加 Git Branch.
 
-1. 修改PROMPT，里面的定义请看这里<https://zsh.sourceforge.io/Doc/Release/Prompt-Expansion.html>
+1. 修改PROMPT，里面详细含义请看这里<https://zsh.sourceforge.io/Doc/Release/Prompt-Expansion.html>
 
-```bash
-PROMPT=$'\n%F{%(#.blue.green)}┌──(%B%F{%(#.red.blue)}%*'$'%b%F{%(#.blue.green)})-[%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} '
-```
-这个是从 Kali 抄的
+    ```bash
+    PROMPT=$'\n%F{%(#.blue.green)}┌──(%B%F{%(#.red.blue)}%*'$'%b%F{%(#.blue.green)})-[%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} '
+    ```
 
-2. 修改Title
+2. 修改Title，为文件路径
     ```bash
     case $TERM in xterm*)
         precmd () {print -Pn "\e]0;%~\a"}
@@ -103,7 +107,9 @@ PROMPT=$'\n%F{%(#.blue.green)}┌──(%B%F{%(#.red.blue)}%*'$'%b%F{%(#.blue.gr
     esac
     ```
 
-3. 添加 Git Branch信息
+3. 添加 Git Branch 信息 方法1，使用 Git 脚本
+
+    > 和**Windows Terminal**一起使用时，改变窗口大小有概率会导致卡死，关闭重新打开即可。
 
     ```bash
     function git_branch_name()
@@ -120,7 +126,8 @@ PROMPT=$'\n%F{%(#.blue.green)}┌──(%B%F{%(#.red.blue)}%*'$'%b%F{%(#.blue.gr
     RPROMPT=\$(git_branch_name)
     ```
 
-4. 使用 `Zsh` 的 `vcs_info` 重新写一编，包含上面所有修改，但是因为引用 `vcs_info` 响应慢，耗资源，但是它支持显示 git 当前 tag，上面只能显示 Branch。
+4. 添加 Git Branch 信息 方法2，使用 `Zsh` 自带的 `vcs_info` 模块。同时包含了 1-3 的修改。
+    > 因为引用 `vcs_info` 导致响应速度下降，但是它支持显示 git 当前 tag，方法1 只能显示 Branch。
 
     ```bash
     autoload -Uz vcs_info
@@ -135,7 +142,7 @@ PROMPT=$'\n%F{%(#.blue.green)}┌──(%B%F{%(#.red.blue)}%*'$'%b%F{%(#.blue.gr
     PROMPT=$'\n%F{%(#.blue.green)}┌──(%B%F{%(#.red.blue)}%*'$'%b%F{%(#.blue.green)})-[%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} '
     RPROMPT=\$vcs_info_msg_0_
     ```
-5. 上次强制关闭 `Zsh`, 导致生成 `.zsh-histfile.lock` 使得 `Zsh` 打不开
+5. 强制关闭 `Zsh`, 导致生成 `.zsh-histfile.lock` 使得 `Zsh` 打开卡住，添加下面这个
     ```
     setopt HIST_FCNTL_LOCK
     ```
@@ -193,6 +200,20 @@ alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 alias diff='diff --color=auto'
 alias ip='ip --color=auto'
+```
+
+### 添加至 Windows Terminal
+> 设置 -> 新增空配置 -> 填入命令行，其他可填可不填，看你心情。
+```
+{
+    "closeOnExit": "always",
+    "commandline": "%USERPROFILE%\\scoop\\apps\\git\\current\\usr\\bin\\bash.exe --login -i",
+    "guid": "{9e15491f-01ea-44bf-878c-c90f7749c9a8}",
+    "hidden": false,
+    "icon": "%USERPROFILE%\\scoop\\apps\\git\\current\\usr\\share\\git\\git-for-windows.ico",
+    "name": "Git Bash",
+    "startingDirectory": "%USERPROFILE%"
+},
 ```
 
 ### 要不要安装oh-my-zsh
