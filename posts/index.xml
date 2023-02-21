@@ -1,4 +1,215 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Victor</title><link>https://vicfree.com/posts/</link><description>Recent content in Posts on Victor</description><generator>Hugo -- gohugo.io</generator><language>zh-hans</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Thu, 02 Feb 2023 13:35:25 +0800</lastBuildDate><atom:link href="https://vicfree.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>IPv6 原理及如何设置 OpenWrt</title><link>https://vicfree.com/2023/02/ipv6-explained-and-setup-in-openwrt/</link><pubDate>Thu, 02 Feb 2023 13:35:25 +0800</pubDate><guid>https://vicfree.com/2023/02/ipv6-explained-and-setup-in-openwrt/</guid><description>如果你觉得看文字很无聊 可以看 onemarcfifty 老师的视频，和B站老湿基 IPv6 from scratch - the very basics of IPv6 explained IPv6 explained - SLAAC and DHCPv6 (IPv6 from scratch part 2) IPv6 with OpenWrt https://www.bilibili.com/video/BV1N14y1j7Ku 此文章大部分内容都是引用自 https://github.com/onemarcfifty/cheat-sheets/blob/main/networking/ipv6.md 1. IPv6 地址</description><content type="html"><![CDATA[<p>如果你觉得看文字很无聊 可以看 onemarcfifty 老师的视频，和B站老湿基</p>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Victor</title><link>https://vicfree.com/posts/</link><description>Recent content in Posts on Victor</description><generator>Hugo -- gohugo.io</generator><language>zh-hans</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Mon, 20 Feb 2023 22:17:36 +0800</lastBuildDate><atom:link href="https://vicfree.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Windows 安装 Zsh in Git Bash</title><link>https://vicfree.com/2023/02/install-zsh-in-git-bash-for-windows/</link><pubDate>Mon, 20 Feb 2023 22:17:36 +0800</pubDate><guid>https://vicfree.com/2023/02/install-zsh-in-git-bash-for-windows/</guid><description>参考： https://dominikrys.com/posts/zsh-in-git-bash-on-windows/ http://i.lckiss.com/?p=6268 https://zhuanlan.zhihu.com/p/455925403 为啥要用 Zsh 最近搞网络和这个博客，Windows 的终端越来越不顺手，常用工具还是 Linux 强，刚开始用 Scoop 安装了 Git Bash，自带了很多工具，</description><content type="html"><![CDATA[<p>参考：</p>
+<p><a href="https://dominikrys.com/posts/zsh-in-git-bash-on-windows/">https://dominikrys.com/posts/zsh-in-git-bash-on-windows/</a></p>
+<p><a href="http://i.lckiss.com/?p=6268">http://i.lckiss.com/?p=6268</a></p>
+<p><a href="https://zhuanlan.zhihu.com/p/455925403">https://zhuanlan.zhihu.com/p/455925403</a></p>
+<h3 id="为啥要用-zsh">为啥要用 <code>Zsh</code></h3>
+<p>最近搞网络和这个博客，Windows 的终端越来越不顺手，常用工具还是 Linux 强，刚开始用 <a href="https://scoop.sh/">Scoop</a> 安装了 <a href="https://gitforwindows.org/">Git Bash</a>，自带了很多工具，真的不够也可以用 Scoop 安装。</p>
+<p>但是最近玩 <a href="https://www.kali.org/">Kali Linux</a> 才发现它自带 <a href="https://zsh.sourceforge.io/">Zsh</a> 超级顺手，最心动的当然是<a href="https://github.com/zsh-users/zsh-autosuggestions">历史命令自动补全/zsh-autosuggestions</a>，上网一查发现支持这个功能的 Shell 屈指可数，就三个：Zsh, Fish, PowerShell 安装 PSReadLine 模块。</p>
+<p>PowerShell 自带的那些命令，真的是难记，也用 Scoop 安装过 <a href="https://ohmyposh.dev/">Oh My Posh</a>, 算了，放弃。</p>
+<p>然后发现网上 Windows 安装 Zsh, 要么是 WSL, 要么是 <a href="https://www.msys2.org/">MSYS2</a>, WSL 访问本地文件还是有点繁琐<code>cd /mnt/c/Users/</code>, MSYS2 需要安装 Zsh 插件 <code>pacman -S zsh git vim</code>, 最后一个办法就是本文想介绍的。</p>
+<p><img src="/images/Zsh.png" alt="img" title="Zsh Shell"></p>
+<h3 id="安装-git-bash-和-zsh">安装 Git Bash 和 Zsh</h3>
+<ol>
+<li>
+<p>下载 <code>Git For Windows</code>, 从下面选择适合你的:</p>
+<ul>
+<li><a href="https://scoop.sh/">Scoop</a> <code>scoop install git</code></li>
+<li><a href="https://git-scm.com/">Git官网</a>下载 <a href="https://git-scm.com/download/win">https://git-scm.com/download/win</a>, 下载点击安装，安装过程一切默认。</li>
+<li><a href="https://www.microsoft.com/store/productId/9NBLGGH4NNS1">Windows10/11 商店</a>自带 <a href="https://aka.ms/getwinget">winget</a>, <code>winget install -e --id Git.Git</code></li>
+</ul>
+</li>
+<li>
+<p>下载 <code>Zsh</code> 插件</p>
+<ul>
+<li>打开 <a href="https://packages.msys2.org/package/zsh?repo=msys&amp;variant=x86_64">https://packages.msys2.org/package/zsh?repo=msys&amp;variant=x86_64</a></li>
+<li>点击下载 File: <a href="https://mirror.msys2.org/msys/x86_64/zsh-5.9-2-x86_64.pkg.tar.zst">https://mirror.msys2.org/msys/x86_64/zsh-5.9-2-x86_64.pkg.tar.zst</a></li>
+</ul>
+<blockquote>
+<p>Git Bash(Git For Windows) 是基于 MSYS2 MINGW64 环境的，所以我们只要手动下载 MSYS2 的 Zsh 插件手动解压到 Git 目录即可。</p>
+</blockquote>
+</li>
+<li>
+<p>将 <code>*.tar.zst</code> 解压缩成 <code>*.tar</code>, 这样可以用任意压缩软件打开 <code>*.tar</code>. 有下面两个办法：</p>
+<ul>
+<li>下载 Windows 解压工具 <a href="https://peazip.github.io/">PeaZip</a> 或者 <a href="https://github.com/mcmilk/7-Zip-zstd/releases">7-Zip 插件</a></li>
+<li>WSL 安装 ztsd 解压，<code>sudo apt update &amp;&amp; sudo apt install zstd -y</code> 然后 <code>unzstd filename.tar.zst</code></li>
+</ul>
+</li>
+<li>
+<p>将压缩包所有文件 (主要是 <code>etc</code> <code>usr</code>) 解压到你的 Git 安装目录，注意是合并文件夹，不会提示覆盖文件。</p>
+<ul>
+<li><code>%USERPROFILE%\scoop\apps\git\current\</code></li>
+<li><code>C:\Program Files\Git\</code></li>
+</ul>
+</li>
+<li>
+<p>打开 Git Bash 运行 <code>Zsh</code></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">zsh
+</span></span></code></pre></div></li>
+<li>
+<p><em><strong>重要</strong></em> 如果你不小心跳过了 <code>Zsh</code> 配置页面，你可以使用下面命令重新配置。</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">autoload -U zsh-newuser-install
+</span></span><span class="line"><span class="cl">zsh-newuser-install -f
+</span></span></code></pre></div><ul>
+<li>按 <code>1</code> &ldquo;Continue to the main menu.&rdquo; 进入配置页面</li>
+<li>按 <code>1</code> 配置命令历史，按 <code>1-3</code> 来修改命令历史大小和位置，按 <code>0</code> 返回。</li>
+<li>按 <code>2</code> 配置补全，按 <code>1</code> 选择 &ldquo;Use the new completion system&rdquo;, 有提示等待确认就按<code>回车</code>，按 <code>0</code> 返回，再次提示是否保存按 <code>y</code></li>
+<li>按 <code>0</code> 保存，完成</li>
+</ul>
+</li>
+<li>
+<p><code>Zsh</code> 设置为默认的 Shell,</p>
+<ul>
+<li><code>Git Bash</code> 输入<code>nano ~/.profile</code>, 会新建 <code>.profile</code> 到你的用户文件夹 <code>%USERPROFILE%</code> 下</li>
+<li>粘贴下面的内容，<code>Crtl+S</code> 保存，再次打开 <code>Git Bash</code>就是 <code>Zsh</code> 了。</li>
+</ul>
+<blockquote>
+<p>下面命令随意可以添加到 <code>.profile</code> &gt; <code>.bash_profile</code> &gt; <code>.bashrc</code> 任一文件下，在 <code>Zsh</code> 内输入 <code>bash</code> 打开 <code>Git Bash</code></p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="k">if</span> <span class="o">[</span> -t <span class="m">1</span> <span class="o">]</span><span class="p">;</span> <span class="k">then</span>
+</span></span><span class="line"><span class="cl"><span class="nb">exec</span> zsh
+</span></span><span class="line"><span class="cl"><span class="k">fi</span>
+</span></span></code></pre></div></li>
+</ol>
+<h3 id="安装zsh插件">安装Zsh插件</h3>
+<ol>
+<li>
+<p>先 clone 所有库，到你电脑本地磁盘上，如用户文件夹 <code>%USERPROFILE%</code></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">git clone https://github.com/zsh-users/zsh-completions
+</span></span><span class="line"><span class="cl">git clone https://github.com/zsh-users/zsh-syntax-highlighting
+</span></span><span class="line"><span class="cl">git clone https://github.com/zsh-users/zsh-autosuggestions
+</span></span></code></pre></div></li>
+<li>
+<p>使用你顺手的编辑器打开 <code>.zshrc</code>, 添加下面这些东西，到第一行</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nb">source</span> ~/zsh-autosuggestions/zsh-autosuggestions.zsh
+</span></span><span class="line"><span class="cl"><span class="nb">source</span> ~/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+</span></span><span class="line"><span class="cl"><span class="nb">source</span> ~/zsh-completions/zsh-completions.plugin.zsh
+</span></span></code></pre></div></li>
+<li>
+<p>**如果自定义了 <code>Git Clone</code> 目录，自己修改上面的路径，比如 <code>/c/Users/xxxx/xxxx</code></p>
+</li>
+</ol>
+<h3 id="自定义zshrc并添加-git-branch">自定义<code>.zshrc</code>，并添加 Git Branch.</h3>
+<ol>
+<li>
+<p>修改PROMPT，里面详细含义请看这里<a href="https://zsh.sourceforge.io/Doc/Release/Prompt-Expansion.html">https://zsh.sourceforge.io/Doc/Release/Prompt-Expansion.html</a></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="nv">PROMPT</span><span class="o">=</span><span class="s1">$&#39;\n%F{%(#.blue.green)}┌──(%B%F{%(#.red.blue)}%*&#39;$&#39;%b%F{%(#.blue.green)})-[%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} &#39;</span>
+</span></span></code></pre></div></li>
+<li>
+<p>修改Title，为文件路径</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="k">case</span> <span class="nv">$TERM</span> in xterm*<span class="o">)</span>
+</span></span><span class="line"><span class="cl">    precmd <span class="o">()</span> <span class="o">{</span>print -Pn <span class="s2">&#34;\e]0;%~\a&#34;</span><span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">;;</span>
+</span></span><span class="line"><span class="cl"><span class="k">esac</span>
+</span></span></code></pre></div></li>
+<li>
+<p>添加 Git Branch 信息 方法1，使用 Git 脚本</p>
+<blockquote>
+<p>和<strong>Windows Terminal</strong>一起使用时，改变窗口大小有概率会导致卡死，关闭重新打开即可。</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="k">function</span> git_branch_name<span class="o">()</span>
+</span></span><span class="line"><span class="cl"><span class="o">{</span>
+</span></span><span class="line"><span class="cl"><span class="nv">branch</span><span class="o">=</span><span class="k">$(</span>git symbolic-ref HEAD 2&gt; /dev/null <span class="p">|</span> awk <span class="s1">&#39;BEGIN{FS=&#34;/&#34;} {print $NF}&#39;</span><span class="k">)</span>
+</span></span><span class="line"><span class="cl"><span class="k">if</span> <span class="o">[[</span> <span class="nv">$branch</span> <span class="o">==</span> <span class="s2">&#34;&#34;</span> <span class="o">]]</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl"><span class="k">then</span>
+</span></span><span class="line"><span class="cl">    :
+</span></span><span class="line"><span class="cl"><span class="k">else</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> <span class="s1">&#39;%F{yellow}on &#39;</span><span class="nv">$branch</span><span class="s1">&#39;%f&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="k">fi</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">setopt prompt_subst
+</span></span><span class="line"><span class="cl"><span class="nv">RPROMPT</span><span class="o">=</span><span class="se">\$</span><span class="o">(</span>git_branch_name<span class="o">)</span>
+</span></span></code></pre></div></li>
+<li>
+<p>添加 Git Branch 信息 方法2，使用 <code>Zsh</code> 自带的 <code>vcs_info</code> 模块。同时包含了 1-3 的修改。</p>
+<blockquote>
+<p>因为引用 <code>vcs_info</code> 导致响应速度下降，但是它支持显示 git 当前 tag，方法1 只能显示 Branch。</p>
+</blockquote>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">autoload -Uz vcs_info
+</span></span><span class="line"><span class="cl"><span class="k">case</span> <span class="nv">$TERM</span> in xterm*<span class="o">)</span>
+</span></span><span class="line"><span class="cl">    precmd <span class="o">()</span> <span class="o">{</span>vcs_info <span class="o">&amp;&amp;</span> print -Pn <span class="s2">&#34;\e]0;%~\a&#34;</span><span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">;;</span>
+</span></span><span class="line"><span class="cl"><span class="k">esac</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">zstyle <span class="s1">&#39;:vcs_info:git:*&#39;</span> formats <span class="s1">&#39;%F{yellow}on %b%f&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">setopt prompt_subst
+</span></span><span class="line"><span class="cl"><span class="nv">PROMPT</span><span class="o">=</span><span class="s1">$&#39;\n%F{%(#.blue.green)}┌──(%B%F{%(#.red.blue)}%*&#39;$&#39;%b%F{%(#.blue.green)})-[%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} &#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nv">RPROMPT</span><span class="o">=</span><span class="se">\$</span>vcs_info_msg_0_
+</span></span></code></pre></div></li>
+<li>
+<p>强制关闭 <code>Zsh</code>, 导致生成 <code>.zsh-histfile.lock</code> 使得 <code>Zsh</code> 打开卡住，添加下面这个</p>
+<pre tabindex="0"><code>setopt HIST_FCNTL_LOCK
+</code></pre></li>
+</ol>
+<h2 id="高大全zshrc模板">高大全.zshrc模板</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl"><span class="k">case</span> <span class="nv">$TERM</span> in xterm*<span class="o">)</span>
+</span></span><span class="line"><span class="cl">    precmd <span class="o">()</span> <span class="o">{</span>print -Pn <span class="s2">&#34;\e]0;%~\a&#34;</span><span class="o">}</span>
+</span></span><span class="line"><span class="cl">    <span class="p">;;</span>
+</span></span><span class="line"><span class="cl"><span class="k">esac</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="k">function</span> git_branch_name<span class="o">()</span>
+</span></span><span class="line"><span class="cl"><span class="o">{</span>
+</span></span><span class="line"><span class="cl">  <span class="nv">branch</span><span class="o">=</span><span class="k">$(</span>git symbolic-ref HEAD 2&gt; /dev/null <span class="p">|</span> awk <span class="s1">&#39;BEGIN{FS=&#34;/&#34;} {print $NF}&#39;</span><span class="k">)</span>
+</span></span><span class="line"><span class="cl">  <span class="k">if</span> <span class="o">[[</span> <span class="nv">$branch</span> <span class="o">==</span> <span class="s2">&#34;&#34;</span> <span class="o">]]</span><span class="p">;</span>
+</span></span><span class="line"><span class="cl">  <span class="k">then</span>
+</span></span><span class="line"><span class="cl">    :
+</span></span><span class="line"><span class="cl">  <span class="k">else</span>
+</span></span><span class="line"><span class="cl">    <span class="nb">echo</span> <span class="s1">&#39;%F{yellow}on &#39;</span><span class="nv">$branch</span><span class="s1">&#39;%f&#39;</span>
+</span></span><span class="line"><span class="cl">  <span class="k">fi</span>
+</span></span><span class="line"><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="cl">setopt prompt_subst
+</span></span><span class="line"><span class="cl"><span class="nv">RPROMPT</span><span class="o">=</span><span class="se">\$</span><span class="o">(</span>git_branch_name<span class="o">)</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nv">PROMPT</span><span class="o">=</span><span class="s1">$&#39;\n%F{%(#.blue.green)}┌──(%B%F{%(#.red.blue)}%*&#39;$&#39;%b%F{%(#.blue.green)})-[%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} &#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">source</span> ~/zsh-autosuggestions/zsh-autosuggestions.zsh
+</span></span><span class="line"><span class="cl"><span class="nb">source</span> ~/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+</span></span><span class="line"><span class="cl"><span class="nb">source</span> ~/zsh-completions/zsh-completions.plugin.zsh
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="c1"># The following lines were added by compinstall</span>
+</span></span><span class="line"><span class="cl">zstyle :compinstall filename <span class="s1">&#39;~/.zshrc&#39;</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">autoload -Uz compinit
+</span></span><span class="line"><span class="cl">compinit
+</span></span><span class="line"><span class="cl"><span class="c1"># End of lines added by compinstall</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># Lines configured by zsh-newuser-install</span>
+</span></span><span class="line"><span class="cl"><span class="nv">HISTFILE</span><span class="o">=</span>~/.histfile
+</span></span><span class="line"><span class="cl"><span class="nv">HISTSIZE</span><span class="o">=</span><span class="m">1000</span>
+</span></span><span class="line"><span class="cl"><span class="nv">SAVEHIST</span><span class="o">=</span><span class="m">1000</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># End of lines configured by zsh-newuser-install</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl">setopt HIST_FCNTL_LOCK
+</span></span><span class="line"><span class="cl">setopt HIST_IGNORE_ALL_DUPS
+</span></span><span class="line"><span class="cl">setopt hist_ignore_dups       <span class="c1"># ignore duplicated commands history list</span>
+</span></span><span class="line"><span class="cl">setopt hist_ignore_space      <span class="c1"># ignore commands that start with space</span>
+</span></span><span class="line"><span class="cl">setopt hist_verify            <span class="c1"># show command with history expansion to user before running it</span>
+</span></span><span class="line"><span class="cl">
+</span></span><span class="line"><span class="cl"><span class="nb">alias</span> <span class="nv">ls</span><span class="o">=</span><span class="s1">&#39;ls --color=auto&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">alias</span> <span class="nv">dir</span><span class="o">=</span><span class="s1">&#39;dir --color=auto&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">alias</span> <span class="nv">vdir</span><span class="o">=</span><span class="s1">&#39;vdir --color=auto&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">alias</span> <span class="nv">grep</span><span class="o">=</span><span class="s1">&#39;grep --color=auto&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">alias</span> <span class="nv">fgrep</span><span class="o">=</span><span class="s1">&#39;fgrep --color=auto&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">alias</span> <span class="nv">egrep</span><span class="o">=</span><span class="s1">&#39;egrep --color=auto&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">alias</span> <span class="nv">diff</span><span class="o">=</span><span class="s1">&#39;diff --color=auto&#39;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">alias</span> <span class="nv">ip</span><span class="o">=</span><span class="s1">&#39;ip --color=auto&#39;</span>
+</span></span></code></pre></div><h3 id="添加至-windows-terminal">添加至 Windows Terminal</h3>
+<blockquote>
+<p>设置 -&gt; 新增空配置 -&gt; 填入命令行，其他可填可不填，看你心情。</p>
+</blockquote>
+<pre tabindex="0"><code>{
+    &#34;closeOnExit&#34;: &#34;always&#34;,
+    &#34;commandline&#34;: &#34;%USERPROFILE%\\scoop\\apps\\git\\current\\usr\\bin\\bash.exe --login -i&#34;,
+    &#34;guid&#34;: &#34;{9e15491f-01ea-44bf-878c-c90f7749c9a8}&#34;,
+    &#34;hidden&#34;: false,
+    &#34;icon&#34;: &#34;%USERPROFILE%\\scoop\\apps\\git\\current\\usr\\share\\git\\git-for-windows.ico&#34;,
+    &#34;name&#34;: &#34;Git Bash&#34;,
+    &#34;startingDirectory&#34;: &#34;%USERPROFILE%&#34;
+},
+</code></pre><h3 id="要不要安装oh-my-zsh">要不要安装oh-my-zsh</h3>
+<p>我是重实用，不中美观的，你想安装就使用这个命令安装</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-bash" data-lang="bash"><span class="line"><span class="cl">sh -c <span class="s2">&#34;</span><span class="k">$(</span>curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh<span class="k">)</span><span class="s2">&#34;</span>
+</span></span></code></pre></div>]]></content></item><item><title>IPv6 原理及如何设置 OpenWrt</title><link>https://vicfree.com/2023/02/ipv6-explained-and-setup-in-openwrt/</link><pubDate>Thu, 02 Feb 2023 13:35:25 +0800</pubDate><guid>https://vicfree.com/2023/02/ipv6-explained-and-setup-in-openwrt/</guid><description>如果你觉得看文字很无聊 可以看 onemarcfifty 老师的视频，和B站老湿基 IPv6 from scratch - the very basics of IPv6 explained IPv6 explained - SLAAC and DHCPv6 (IPv6 from scratch part 2) IPv6 with OpenWrt https://www.bilibili.com/video/BV1N14y1j7Ku 此文章大部分内容都是引用自 https://github.com/onemarcfifty/cheat-sheets/blob/main/networking/ipv6.md 1. IPv6 地址</description><content type="html"><![CDATA[<p>如果你觉得看文字很无聊 可以看 onemarcfifty 老师的视频，和B站老湿基</p>
 <ol>
 <li><a href="https://youtu.be/oItwDXraK1M">IPv6 from scratch - the very basics of IPv6 explained</a></li>
 <li><a href="https://youtu.be/jlG_nrCOmJc">IPv6 explained - SLAAC and DHCPv6 (IPv6 from scratch part 2)</a></li>
