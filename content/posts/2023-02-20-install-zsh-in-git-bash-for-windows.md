@@ -62,17 +62,16 @@ PowerShell 自带的那些命令，真的是难记，也用 Scoop 安装过 [Oh 
     * 按 `1` 配置命令历史，按 `1-3` 来修改命令历史大小和位置，按 `0` 返回。
     * 按 `2` 配置补全，按 `1` 选择 "Use the new completion system", 有提示等待确认就按`回车`，按 `0` 返回，再次提示是否保存按 `y`
     * 按 `0` 保存，完成
-7. `Zsh` 设置为默认的 Shell, 
-    * `Git Bash` 输入`nano ~/.profile`, 会新建 `.profile` 到你的用户文件夹 `%USERPROFILE%` 下
-    * 粘贴下面的内容，`Crtl+S` 保存，再次打开 `Git Bash`就是 `Zsh` 了。
-
-    > 下面命令随意可以添加到 `.profile` > `.bash_profile` > `.bashrc` 任一文件下，在 `Zsh` 内输入 `bash` 打开 `Git Bash`
-
+7. `Zsh` 设置为默认的 Shell, 有两种办法:
+    1. `%USERPROFILE%\scoop\apps\git\current\usr\bin\bash.exe -i -l -c zsh`, 末尾加入 ` -i -l -c zsh`.
+    2. `nano ~/.profile` 新建 `.profile` 到用户文件夹 `%USERPROFILE%`, 粘贴下面的内容，`Crtl+S` 保存。
     ```bash
     if [ -t 1 ]; then
     exec zsh
     fi
     ```
+    > 也可添加到以 `.profile` > `.bash_profile` > `.bashrc`, 优先级越高，兼容越好，还能手动切换到 bash.
+
 ### 安装Zsh插件
 
 1. 先 clone 所有库，到你电脑本地磁盘上，如用户文件夹 `%USERPROFILE%`
@@ -109,25 +108,18 @@ PowerShell 自带的那些命令，真的是难记，也用 Scoop 安装过 [Oh 
 
 3. 添加 Git Branch 信息 方法1，使用 Git 脚本
 
-    > 和**Windows Terminal**一起使用时，改变窗口大小有概率会导致卡死，关闭重新打开即可。
+    > 和**Windows Terminal**一起使用时，命令行为空时改变窗口大小会导致卡死，关闭重新打开即可。
 
     ```bash
-    function git_branch_name()
-    {
-    branch=$(git symbolic-ref HEAD 2> /dev/null | awk 'BEGIN{FS="/"} {print $NF}')
-    if [[ $branch == "" ]];
-    then
-        :
-    else
-        echo '%F{yellow}on '$branch'%f'
-    fi
+    parse_git_branch() {
+    git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/on \1/'
     }
     setopt prompt_subst
-    RPROMPT=\$(git_branch_name)
+    RPROMPT=%F{yellow}\$(parse_git_branch)%f
     ```
 
 4. 添加 Git Branch 信息 方法2，使用 `Zsh` 自带的 `vcs_info` 模块。同时包含了 1-3 的修改。
-    > 因为引用 `vcs_info` 导致响应速度下降，但是它支持显示 git 当前 tag，方法1 只能显示 Branch。
+    > 因为引用 `vcs_info` 会导致响应速度下降。
 
     ```bash
     autoload -Uz vcs_info
@@ -136,13 +128,13 @@ PowerShell 自带的那些命令，真的是难记，也用 Scoop 安装过 [Oh 
         ;;
     esac
 
-    zstyle ':vcs_info:git:*' formats '%F{yellow}on %b%f'
+    zstyle ':vcs_info:git:*' formats 'on %b'
 
     setopt prompt_subst
     PROMPT=$'\n%F{%(#.blue.green)}┌──(%B%F{%(#.red.blue)}%*'$'%b%F{%(#.blue.green)})-[%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} '
-    RPROMPT=\$vcs_info_msg_0_
+    RPROMPT=%F{yellow}\$vcs_info_msg_0_%f
     ```
-5. 强制关闭 `Zsh`, 导致生成 `.zsh-histfile.lock` 使得 `Zsh` 打开卡住，添加下面这个
+5. 强制关闭 `Zsh`, 导致生成 `.zsh-histfile.lock` 使得 `Zsh` 打开卡住，添加下面这个解决。
     ```
     setopt HIST_FCNTL_LOCK
     ```
@@ -154,20 +146,12 @@ case $TERM in xterm*)
     precmd () {print -Pn "\e]0;%~\a"}
     ;;
 esac
-
-function git_branch_name()
-{
-  branch=$(git symbolic-ref HEAD 2> /dev/null | awk 'BEGIN{FS="/"} {print $NF}')
-  if [[ $branch == "" ]];
-  then
-    :
-  else
-    echo '%F{yellow}on '$branch'%f'
-  fi
-}
 setopt prompt_subst
-RPROMPT=\$(git_branch_name)
-
+parse_git_branch() {
+git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/on \1/'
+}
+# https://zsh.sourceforge.io/Doc/Release/Prompt-Expansion.html
+RPROMPT=%F{yellow}\$(parse_git_branch)%f
 PROMPT=$'\n%F{%(#.blue.green)}┌──(%B%F{%(#.red.blue)}%*'$'%b%F{%(#.blue.green)})-[%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} '
 
 source ~/zsh-autosuggestions/zsh-autosuggestions.zsh
@@ -186,6 +170,7 @@ HISTSIZE=1000
 SAVEHIST=1000
 # End of lines configured by zsh-newuser-install
 
+# https://zsh.sourceforge.io/Doc/Release/Options.html
 setopt HIST_FCNTL_LOCK
 setopt HIST_IGNORE_ALL_DUPS
 setopt hist_ignore_dups       # ignore duplicated commands history list
@@ -204,10 +189,13 @@ alias ip='ip --color=auto'
 
 ### 添加至 Windows Terminal
 > 设置 -> 新增空配置 -> 填入命令行，其他可填可不填，看你心情。
+
+> -i = --interactive, -l = --login, -c = execute command
+
 ```
 {
     "closeOnExit": "always",
-    "commandline": "%USERPROFILE%\\scoop\\apps\\git\\current\\usr\\bin\\bash.exe --login -i",
+    "commandline": "%USERPROFILE%\\scoop\\apps\\git\\current\\usr\\bin\\bash.exe -i -l -c zsh",
     "guid": "{9e15491f-01ea-44bf-878c-c90f7749c9a8}",
     "hidden": false,
     "icon": "%USERPROFILE%\\scoop\\apps\\git\\current\\usr\\share\\git\\git-for-windows.ico",
