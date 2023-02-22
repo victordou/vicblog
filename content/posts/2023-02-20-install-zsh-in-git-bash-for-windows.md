@@ -53,7 +53,7 @@ PowerShell 自带的那些命令，真的是难记，也用 Scoop 安装过 [Oh 
     zsh
     ```
 
-6. ***重要*** 如果你不小心跳过了 `Zsh` 配置页面，你可以使用下面命令重新配置。
+6. **重要** 如果你不小心跳过了 `Zsh` 配置页面，你可以使用下面命令重新配置。
     ```bash
     autoload -U zsh-newuser-install
     zsh-newuser-install -f
@@ -63,18 +63,18 @@ PowerShell 自带的那些命令，真的是难记，也用 Scoop 安装过 [Oh 
     * 按 `2` 配置补全，按 `1` 选择 "Use the new completion system", 有提示等待确认就按`回车`，按 `0` 返回，再次提示是否保存按 `y`
     * 按 `0` 保存，完成
 7. `Zsh` 设置为默认的 Shell, 有两种办法:
-    1. `%USERPROFILE%\scoop\apps\git\current\usr\bin\bash.exe -i -l -c zsh`, 末尾加入 ` -i -l -c zsh`.
-    2. `nano ~/.profile` 新建 `.profile` 到用户文件夹 `%USERPROFILE%`, 粘贴下面的内容，`Crtl+S` 保存。
+    1. **推荐**，在 `%USERPROFILE%\scoop\apps\git\current\usr\bin\bash.exe -i -l -c zsh`, 末尾加入 ` -i -l -c zsh`.
+    2. 不推荐，新建 `.profile` 到**用户文件夹** `%USERPROFILE%`, 使用文本编辑器 `nano ~/.profile` 粘贴下面的内容，`Crtl+S` 保存。
+        > 也可添加到以下文件 `.profile` > `.bash_profile` > `.bashrc`, 优先级越高，兼容越好，还能手动切换到 bash.
     ```bash
-    if [ -t 1 ]; then
+    if [ -x /usr/bin/zsh.exe]; then
     exec zsh
     fi
     ```
-    > 也可添加到以 `.profile` > `.bash_profile` > `.bashrc`, 优先级越高，兼容越好，还能手动切换到 bash.
 
 ### 安装Zsh插件
 
-1. 先 clone 所有库，到你电脑本地磁盘上，如用户文件夹 `%USERPROFILE%`
+1. 先 clone 所有库，到你电脑本地磁盘上，如**用户文件夹** `%USERPROFILE%`
 
     ```bash
     git clone https://github.com/zsh-users/zsh-completions
@@ -88,7 +88,7 @@ PowerShell 自带的那些命令，真的是难记，也用 Scoop 安装过 [Oh 
     source ~/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
     source ~/zsh-completions/zsh-completions.plugin.zsh
     ```
-3. **如果自定义了 `Git Clone` 目录，自己修改上面的路径，比如 `/c/Users/xxxx/xxxx`
+3. 如果你修改了 `Git Clone` 目录，请自己修改上面的路径，比如 `/c/Users/xxxx/xxxx`
 
 ### 自定义`.zshrc`，并添加 Git Branch.
 
@@ -106,9 +106,9 @@ PowerShell 自带的那些命令，真的是难记，也用 Scoop 安装过 [Oh 
     esac
     ```
 
-3. 添加 Git Branch 信息 方法1，使用 Git 脚本
+3. 添加 Git Branch 信息-方法1，使用 Git 脚本
 
-    > 和**Windows Terminal**一起使用时，命令行为空时改变窗口大小会导致卡死，关闭重新打开即可。
+    > 和**Windows Terminal**一起使用时，Zsh输入框为空时改变窗口大小会导致卡死，方法2不会卡死。
 
     ```bash
     parse_git_branch() {
@@ -118,7 +118,7 @@ PowerShell 自带的那些命令，真的是难记，也用 Scoop 安装过 [Oh 
     RPROMPT=%F{yellow}\$(parse_git_branch)%f
     ```
 
-4. 添加 Git Branch 信息 方法2，使用 `Zsh` 自带的 `vcs_info` 模块。同时包含了 1-3 的修改。
+4. 添加 Git Branch 信息-方法2，使用 `Zsh` 自带的 `vcs_info` 模块。同时包含了 1-3 的修改。
     > 因为引用 `vcs_info` 会导致响应速度下降。
 
     ```bash
@@ -142,11 +142,13 @@ PowerShell 自带的那些命令，真的是难记，也用 Scoop 安装过 [Oh 
 ## 高大全.zshrc模板
 
 ```bash
+# xterm set the title
 case $TERM in xterm*)
     precmd () {print -Pn "\e]0;%~\a"}
     ;;
 esac
 setopt prompt_subst
+# Shows Git branch name in prompt.
 parse_git_branch() {
 git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/on \1/'
 }
@@ -162,7 +164,7 @@ source ~/zsh-completions/zsh-completions.plugin.zsh
 zstyle :compinstall filename '~/.zshrc'
 
 autoload -Uz compinit
-compinit
+compinit -d ~/.zcompdump
 # End of lines added by compinstall
 # Lines configured by zsh-newuser-install
 HISTFILE=~/.histfile
@@ -177,18 +179,20 @@ setopt hist_ignore_dups       # ignore duplicated commands history list
 setopt hist_ignore_space      # ignore commands that start with space
 setopt hist_verify            # show command with history expansion to user before running it
 
-alias ls='ls --color=auto'
-alias dir='dir --color=auto'
-alias vdir='vdir --color=auto'
-alias grep='grep --color=auto'
-alias fgrep='fgrep --color=auto'
-alias egrep='egrep --color=auto'
-alias diff='diff --color=auto'
-alias ip='ip --color=auto'
+if [ -x /usr/bin/dircolors ]; then
+    alias ls='ls --color=auto'
+    alias dir='dir --color=auto'
+    alias vdir='vdir --color=auto'
+    alias grep='grep --color=auto'
+    alias fgrep='fgrep --color=auto'
+    alias egrep='egrep --color=auto'
+    alias diff='diff --color=auto'
+    alias ip='ip --color=auto'
+fi
 ```
 
 ### 添加至 Windows Terminal
-> 设置 -> 新增空配置 -> 填入命令行，其他可填可不填，看你心情。
+> 设置 -> 新增空配置 -> 填入命令行`bash.exe -i -l -c zsh`，其他可填可不填，看你心情。
 
 > -i = --interactive, -l = --login, -c = execute command
 
@@ -203,7 +207,13 @@ alias ip='ip --color=auto'
     "startingDirectory": "%USERPROFILE%"
 },
 ```
-
+> 其实上面可以填 `zsh.exe -i -l`, 但是在初始化 `/etc/profile` 和 `/mingw64/share/git/completion/git-completion.bash`，脚本呢有句话 `ERROR: this script is obsolete, please see git-completion.zsh`
+```bash
+if [[ -n ${ZSH_VERSION-} && -z ${GIT_SOURCING_ZSH_COMPLETION-} ]]; then
+	echo "ERROR: this script is obsolete, please see git-completion.zsh" 1>&2
+	return
+fi
+```
 ### 要不要安装oh-my-zsh
 我是重实用，不中美观的，你想安装就使用这个命令安装
 ```bash
