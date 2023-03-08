@@ -98,7 +98,7 @@ PowerShell 自带的那些命令，真的是难记，也用 Scoop 安装过 [Oh 
     PROMPT=$'\n%F{%(#.blue.green)}┌──(%B%F{%(#.red.blue)}%*'$'%b%F{%(#.blue.green)})-[%B%F{reset}%(6~.%-1~/…/%4~.%5~)%b%F{%(#.blue.green)}]\n└─%B%(#.%F{red}#.%F{blue}$)%b%F{reset} '
     ```
 
-2. 修改Title，为文件路径
+2. 修改Title，为文件路径，某些老的终端软件不支持\e，所以要替换，\033=\e, \007=\a, \012=\n, \015=\r.
     ```bash
     case $TERM in xterm*)
         precmd () {print -Pn "\e]0;%~\a"}
@@ -188,11 +188,13 @@ sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/too
 
 ```bash
 # History configurations
+# https://manpages.debian.org/bullseye/zsh-common/zshparam.1.en.html
 HISTFILE=~/.zsh-history
 HISTSIZE=1000
 SAVEHIST=2000
 HISTORY_IGNORE='(history*|h|ls|ll|la|l|cd|pwd|exit|cd ..)'
 # configure key keybindings
+# https://manpages.debian.org/bullseye/zsh-common/zshzle.1.en.html
 bindkey -e                                        # emacs key bindings
 bindkey ' ' magic-space                           # do history expansion on space
 bindkey '^U' backward-kill-line                   # ctrl + U
@@ -206,26 +208,31 @@ bindkey '^[[H' beginning-of-line                  # home
 bindkey '^[[F' end-of-line                        # end
 bindkey '^[[Z' undo                               # shift + tab undo last action
 
+# zsh options, case insensitive and underscores are ignored
 # https://zsh.sourceforge.io/Doc/Release/Options.html
 #setopt APPEND_HISTORY      # append their history list to the history file, rather than replace it.
 setopt INC_APPEND_HISTORY   # history lines are added to the $HISTFILE incrementally
 setopt HIST_FCNTL_LOCK      # add zsh history file lock avoid corruption
 setopt HIST_IGNORE_ALL_DUPS # history list duplicates an older one, the older command is removed from the list
 # setopt hist_ignore_dups   # ignore duplicated commands history list
-setopt hist_ignore_space    # ignore commands that start with space
-setopt hist_verify          # show command with history expansion to user before running it
-setopt autocd               # change directory just by typing its name
-setopt interactivecomments  # allow comments in interactive mode
-setopt numericglobsort      # sort filenames numerically when it makes sense
-setopt prompt_subst         # prompt extend function, for git branch display
+setopt HIST_IGNORE_SPACE    # ignore commands that start with space
+setopt HIST_VERIFY          # show command with history expansion to user before running it
+setopt AUTO_CD              # change directory just by typing its name
+setopt INTERACTIVE_COMMENTS # allow comments in interactive mode
+setopt NUMERIC_GLOB_SORT    # sort filenames numerically when it makes sense
+setopt PROMPT_SUBST         # prompt extend function, for git branch display
 
 # xterm set the title
+# \033=\e, \007=\a, \012=\n, \015=\r, https://manpages.debian.org/bullseye/manpages/ascii.7.en.html
+# https://manpages.debian.org/bullseye/xterm/xterm.1.en.html
+# https://web.archive.org/web/20221206072000/https://tldp.org/HOWTO/Xterm-Title-4.html
 case $TERM in xterm*)
     precmd () {print -Pn "\e]0;%~\a"}
     ;;
 esac
 
 # Shows Git branch name in prompt.
+# https://code.mendhak.com/simple-bash-prompt-for-developers-ps1-git/
 function parse_git_branch {
     if [ -d ./.git ]; then
         local branch=$(git branch --no-color 2> /dev/null | sed -e '/^[^*]/d' -e "s/* \(.*\)/\1/")
@@ -273,19 +280,20 @@ fi
 alias ll='ls -laFh'
 alias la='ls -A'
 alias l='ls -AF1'
+alias pwd='pwd -W'
 
 # be paranoid
 alias cp='cp -i'
 alias mv='mv -i'
 alias rm='rm -i'
 
-extract () {
+function extract () {
    if [ -f $1 ] ; then
        case $1 in
            *.tar.bz2)   tar xvjf $1    ;;
            *.tar.gz)    tar xvzf $1    ;;
            *.bz2)       bunzip2 $1     ;;
-           *.rar)       unrar x $1       ;;
+           *.rar)       unrar x $1     ;;
            *.gz)        gunzip $1      ;;
            *.tar)       tar xvf $1     ;;
            *.tbz2)      tar xvjf $1    ;;
@@ -362,11 +370,12 @@ fpath=(~/zsh-completions/src $fpath)
 #source ~/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 #source ~/zsh-completions/zsh-completions.plugin.zsh
 
-# The following lines were added by compinstall
+# compinit https://manpages.debian.org/bullseye/zsh-common/zshcompsys.1.en.html
+# zstyle https://manpages.debian.org/bullseye/zsh-common/zshmodules.1.en.html
 zstyle :compinstall filename '~/.zshrc'
 autoload -Uz compinit
 compinit -d ~/.zcompdump
-# End of lines added by compinstall
+
 zstyle ':completion:*:*:*:*:*' menu select
 zstyle ':completion:*' auto-description 'specify: %d'
 zstyle ':completion:*' completer _expand _complete
@@ -387,6 +396,7 @@ zstyle ':completion:*:kill:*' command 'ps -u $USER -o pid,%cpu,tty,cputime,cmd'
 ```bash
 # export LANG=C.UTF-8
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+# https://manpages.debian.org/bullseye/bash/bash.1.en.html
 HISTFILE=~/.bash-history
 HISTSIZE=1000
 HISTFILESIZE=2000
@@ -395,14 +405,13 @@ HISTIGNORE="history*:h:exit:ls:ll:la:l:cd:pwd:cd .."
 
 # https://www.gnu.org/software/bash/manual/html_node/Bash-Variables.html
 # https://www.gnu.org/software/bash/manual/html_node/The-Shopt-Builtin.html
-# https://unix.stackexchange.com/a/18443
-
 # append to the history file, don't overwrite it
 shopt -s histappend
 # check the window size after each command and, if necessary,
 # update the values of LINES and COLUMNS.
 shopt -s checkwinsize
 
+# https://unix.stackexchange.com/a/18443
 function historymerge {
     history -n; history -w; history -c; history -r;
 }
@@ -436,14 +445,16 @@ function parse_git_branch {
 # Define prompt colors
 prompt_color='\[\033[;35m\]'
 info_color='\[\033[1;32m\]'
-prompt_symbol=㉿
 
-PS1=$prompt_color'\[\033]0;\w\007\]\n┌──('$info_color'\t'$prompt_color')-[\[\033[0;1m\]\w'$prompt_color']\[\033[;33m\]`parse_git_branch`\n'$prompt_color'└─'$info_color'\$\[\033[0m\] '
-# PS1=$prompt_color'\[\033]0;\w\007\]\n┌──('$info_color'\t'$prompt_color')-[\[\033[0;1m\]\w'$prompt_color']\[\033[;33m\]`__git_ps1`\n'$prompt_color'└─'$info_color'\$\[\033[0m\] '
+# \033=\e, \007=\a, \012=\n, \015=\r, https://manpages.debian.org/bullseye/manpages/ascii.7.en.html
+# https://manpages.debian.org/bullseye/xterm/xterm.1.en.html
+# https://web.archive.org/web/20221206072000/https://tldp.org/HOWTO/Xterm-Title-4.html
+# https://manpages.debian.org/bullseye/bash/bash.1.en.html
+PS1='\[\033]0;\w\007\]\n'$prompt_color'┌──('$info_color'\t'$prompt_color')-[\[\033[0;1m\]\w'$prompt_color']\[\033[;33m\]$(parse_git_branch)\012'$prompt_color'└─'$info_color'\$\[\033[0m\] '
+#PS1=$prompt_color'\[\033]0;\w\007\]\n┌──('$info_color'\t'$prompt_color')-[\[\033[0;1m\]\w'$prompt_color']\[\033[;33m\]$(GIT_PS1_SHOWUNTRACKEDFILES=1 GIT_PS1_SHOWDIRTYSTATE=1 __git_ps1)\012'$prompt_color'└─'$info_color'\$\[\033[0m\] '
 
 unset prompt_color
 unset info_color
-unset prompt_symbol
 
 # enable color support of ls, less and man, and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
@@ -473,13 +484,14 @@ fi
 alias ll='ls -laFh'
 alias la='ls -A'
 alias l='ls -AF1'
+alias pwd='pwd -W'
 
 # be paranoid
 alias cp='cp -i'
 alias mv='mv -i'
 alias rm='rm -i'
 
-extract () {
+function extract () {
    if [ -f $1 ] ; then
        case $1 in
            *.tar.bz2)   tar xvjf $1    ;;
