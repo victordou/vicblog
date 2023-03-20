@@ -1,6 +1,6 @@
 ---
 title: "Stable Diffusion 使用 AMD ROCm 显卡加速 "
-date: 2023-02-20T22:17:36+08:00
+date: 2023-03-20T22:12:15+08:00
 draft: false
 toc: false
 images:
