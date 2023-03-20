@@ -1,11 +1,12 @@
 ---
 title: "Stable Diffusion 使用 AMD ROCm 显卡加速 "
-date: 2023-03-20T22:12:15+08:00
+date: 2023-03-20T12:12:15+08:00
 draft: false
 toc: false
 images:
 tags: 
   - pytorch
+  - stable diffusion
   - AI
 slug: stable-diffusion-amd-gpu-rocm-ubuntu
 ---
