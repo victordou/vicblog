@@ -18,7 +18,7 @@ slug: stable-diffusion-amd-gpu-rocm-ubuntu
 <https://github.com/XiaozhouTAT/stable-diffusion-webui-use-amd-gpu>
 
 ## Ubuntu
-- 本篇文章使用 Ubuntu 22.04 LTS，理论上 Ubuntu 20.04 LTS 也可以，[下载地址](https://ubuntu.com/download/desktop)。
+- 本篇文章使用 Ubuntu 20.04 LTS（不频繁更新的系统才是好系统），理论上 Ubuntu 22.04 LTS 也可以，[下载地址](https://ubuntu.com/download/desktop)。
 - 使用 Linux 和 Python 难度最大的不是安装，而是依赖问题，请做好心理准备。
 - Ubuntu 可以安装在电脑上任意分区，会自动添加引导到 Windows 的引导上。
 - RX6700XT 按照 [Tom's Hardware](https://www.tomshardware.com/news/stable-diffusion-gpu-benchmarks)文章的测试参数，跑512x512, 100it 约16秒，6.25it/s.
@@ -50,7 +50,7 @@ sudo apt install wget git python3 python3-venv python3-pip -y
 # https://docs.amd.com/category/Release%20Documentation
 # https://www.amd.com/zh-hans/support/graphics/radeon-500-series/radeon-rx-500-series/radeon-rx-580
 # https://www.amd.com/zh-hans/support/graphics/amd-radeon-6000-series/amd-radeon-6700-series/amd-radeon-rx-6700-xt
-wget https://repo.radeon.com/amdgpu-install/22.40.3/ubuntu/jammy/amdgpu-install_5.4.50403-1_all.deb # Rocm 5.4.3 on Ubuntu 22.04 LTS (jammy)
+wget https://repo.radeon.com/amdgpu-install/22.40.3/ubuntu/focal/amdgpu-install_5.4.50403-1_all.deb # Rocm 5.4.3 on Ubuntu 20.04 LTS (focal)
 sudo apt install ./amdgpu-install_5.4.50403-1_all.deb
 sudo apt update && sudo apt upgrade -y
 sudo amdgpu-install --usecase=rocm --no-dkms
@@ -76,10 +76,16 @@ rocminfo | grep 'Name'  # 显卡名称，gfx代号
 ```sh
 # https://download.pytorch.org/whl/ -> https://mirror.sjtu.edu.cn/pytorch-wheels/
 # ALL pytorch version https://download.pytorch.org/whl/torch_stable.html or https://mirror.sjtu.edu.cn/pytorch-wheels/torch_stable.html search ROCm
-pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
-python -m pip install -i https://pypi.tuna.tsinghua.edu.cn/simple --upgrade pip wheel
+# Pip的配置文件为用户根目录下的：~/.pip/pip.conf or ~/.config/pip/pip.conf（Windows路径为：C:\Users\<UserName>\pip\pip.ini）
+# https://pypi.tuna.tsinghua.edu.cn/simple
+# http://mirrors.aliyun.com/pypi/simple
+# http://pypi.douban.com/simple
+# https://mirrors.cloud.tencent.com/pypi/simple
+# https://repo.huaweicloud.com/repository/pypi/simple
+pip config set global.index-url https://mirrors.aliyun.com/pypi/simple
+python -m pip install --upgrade pip wheel -i https://mirrors.aliyun.com/pypi/simple
 #pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm5.4.2
-pip install torch torchvision torchaudio -f https://mirror.sjtu.edu.cn/pytorch-wheels/rocm5.4.2/torch_stable.html
+pip install torch torchvision torchaudio -f https://mirror.sjtu.edu.cn/pytorch-wheels/rocm5.4.2/torch_stable.html -i https://mirrors.aliyun.com/pypi/simple
 pip list | grep 'torch'
 #pip install torch==2.0.0+rocm5.4.2 torchvision==0.15.1+rocm5.4.2 torchaudio==2.0.1+rocm5.4.2 -f https://mirror.sjtu.edu.cn/pytorch-wheels/rocm5.4.2/torch_stable.html
 # 下面命令可能能会帮你解决依赖问题，也可能不会。
@@ -92,7 +98,14 @@ pip install -r req.txt
 ```sh
 git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui
 cd stable-diffusion-webui
-#pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
+#python -m venv venv
+#source venv/bin/activate #Linux
+#pip install virtualenv #Windows
+#.\venv\Scripts\activate #Windows CMD or PS
+#source venv/Scripts/activate #Git Bash
+#python -m pip install --upgrade pip wheel -i https://mirrors.aliyun.com/pypi/simple
+#pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple
+#deactivate
 ```
 > 从这里开始会下载很多 GitHub 的文件，可能会下载失败，请加速器吧。或者了解 <https://ghproxy.com> 的用法。
 
@@ -103,9 +116,9 @@ export HSA_OVERRIDE_GFX_VERSION=10.3.0 # gfx1030 Radeon RX 6800 6800 XT 6900 XT,
 #export HSA_OVERRIDE_GFX_VERSION=8.0.3 # gfx803 Radeon RX580
 # RX5000 系列需要在 COMMANDLINE_ARGS 添加 --precision full --no-half，RX500 和 RX6000 系列不需要
 # --medvram --lowvram --opt-sub-quad-attention --disable-nan-check https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Command-Line-Arguments-and-Settings
-export COMMANDLINE_ARGS="--skip-torch-cuda-test --autolaunch --listen"
-export TORCH_COMMAND="pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm5.4.2"
-#export TORCH_COMMAND="pip install torch torchvision torchaudio -f https://mirror.sjtu.edu.cn/pytorch-wheels/rocm5.4.2/torch_stable.html"
+export COMMANDLINE_ARGS="--skip-torch-cuda-test --autolaunch --listen --theme dark"
+#export TORCH_COMMAND="pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm5.4.2"
+export TORCH_COMMAND="pip install torch torchvision torchaudio -f https://mirror.sjtu.edu.cn/pytorch-wheels/rocm5.4.2/torch_stable.html -i https://mirrors.aliyun.com/pypi/simple"
 ```
 
 ### 下载Model
