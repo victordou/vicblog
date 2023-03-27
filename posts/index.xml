@@ -1,9 +1,9 @@
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Victor</title><link>https://vicfree.com/posts/</link><description>Recent content in Posts on Victor</description><generator>Hugo -- gohugo.io</generator><language>zh-hans</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Mon, 20 Mar 2023 12:12:15 +0800</lastBuildDate><atom:link href="https://vicfree.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Stable Diffusion 使用 AMD ROCm 显卡加速</title><link>https://vicfree.com/2023/03/stable-diffusion-amd-gpu-rocm-ubuntu/</link><pubDate>Mon, 20 Mar 2023 12:12:15 +0800</pubDate><guid>https://vicfree.com/2023/03/stable-diffusion-amd-gpu-rocm-ubuntu/</guid><description>https://www.reddit.com/r/StableDiffusion/comments/zu9w40/novices_guide_to_automatic1111_on_linux_with_amd/ https://bbs.ruliweb.com/userboard/board/700315/read/3180 https://github.com/XiaozhouTAT/stable-diffusion-webui-use-amd-gpu Ubuntu 本篇文章使用 Ubuntu 22.04 LTS，理论上 Ubuntu 20.04 LTS 也可以，下载地址。 使用 Linux 和 Python 难度最大的不是安装，而是依赖问题，请做好心理准备。 Ubuntu 可以安装在电脑上</description><content type="html"><![CDATA[<p><a href="https://www.reddit.com/r/StableDiffusion/comments/zu9w40/novices_guide_to_automatic1111_on_linux_with_amd/">https://www.reddit.com/r/StableDiffusion/comments/zu9w40/novices_guide_to_automatic1111_on_linux_with_amd/</a></p>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>Posts on Victor</title><link>https://vicfree.com/posts/</link><description>Recent content in Posts on Victor</description><generator>Hugo -- gohugo.io</generator><language>zh-hans</language><copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright><lastBuildDate>Mon, 20 Mar 2023 12:12:15 +0800</lastBuildDate><atom:link href="https://vicfree.com/posts/index.xml" rel="self" type="application/rss+xml"/><item><title>Stable Diffusion 使用 AMD ROCm 显卡加速</title><link>https://vicfree.com/2023/03/stable-diffusion-amd-gpu-rocm-ubuntu/</link><pubDate>Mon, 20 Mar 2023 12:12:15 +0800</pubDate><guid>https://vicfree.com/2023/03/stable-diffusion-amd-gpu-rocm-ubuntu/</guid><description>https://www.reddit.com/r/StableDiffusion/comments/zu9w40/novices_guide_to_automatic1111_on_linux_with_amd/ https://bbs.ruliweb.com/userboard/board/700315/read/3180 https://github.com/XiaozhouTAT/stable-diffusion-webui-use-amd-gpu Ubuntu 本篇文章使用 Ubuntu 20.04 LTS（不频繁更新的系统才是好系统），理论上 Ubuntu 22.04 LTS 也可以，下载地址。 使用 Linux 和 Python 难度最大的不是安装，而是依赖问题，请做</description><content type="html"><![CDATA[<p><a href="https://www.reddit.com/r/StableDiffusion/comments/zu9w40/novices_guide_to_automatic1111_on_linux_with_amd/">https://www.reddit.com/r/StableDiffusion/comments/zu9w40/novices_guide_to_automatic1111_on_linux_with_amd/</a></p>
 <p><a href="https://bbs.ruliweb.com/userboard/board/700315/read/3180">https://bbs.ruliweb.com/userboard/board/700315/read/3180</a></p>
 <p><a href="https://github.com/XiaozhouTAT/stable-diffusion-webui-use-amd-gpu">https://github.com/XiaozhouTAT/stable-diffusion-webui-use-amd-gpu</a></p>
 <h2 id="ubuntu">Ubuntu</h2>
 <ul>
-<li>本篇文章使用 Ubuntu 22.04 LTS，理论上 Ubuntu 20.04 LTS 也可以，<a href="https://ubuntu.com/download/desktop">下载地址</a>。</li>
+<li>本篇文章使用 Ubuntu 20.04 LTS（不频繁更新的系统才是好系统），理论上 Ubuntu 22.04 LTS 也可以，<a href="https://ubuntu.com/download/desktop">下载地址</a>。</li>
 <li>使用 Linux 和 Python 难度最大的不是安装，而是依赖问题，请做好心理准备。</li>
 <li>Ubuntu 可以安装在电脑上任意分区，会自动添加引导到 Windows 的引导上。</li>
 <li>RX6700XT 按照 <a href="https://www.tomshardware.com/news/stable-diffusion-gpu-benchmarks">Tom&rsquo;s Hardware</a>文章的测试参数，跑512x512, 100it 约16秒，6.25it/s.</li>
@@ -43,7 +43,7 @@
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="c1"># https://docs.amd.com/category/Release%20Documentation</span>
 </span></span><span class="line"><span class="cl"><span class="c1"># https://www.amd.com/zh-hans/support/graphics/radeon-500-series/radeon-rx-500-series/radeon-rx-580</span>
 </span></span><span class="line"><span class="cl"><span class="c1"># https://www.amd.com/zh-hans/support/graphics/amd-radeon-6000-series/amd-radeon-6700-series/amd-radeon-rx-6700-xt</span>
-</span></span><span class="line"><span class="cl">wget https://repo.radeon.com/amdgpu-install/22.40.3/ubuntu/jammy/amdgpu-install_5.4.50403-1_all.deb <span class="c1"># Rocm 5.4.3 on Ubuntu 22.04 LTS (jammy)</span>
+</span></span><span class="line"><span class="cl">wget https://repo.radeon.com/amdgpu-install/22.40.3/ubuntu/focal/amdgpu-install_5.4.50403-1_all.deb <span class="c1"># Rocm 5.4.3 on Ubuntu 20.04 LTS (focal)</span>
 </span></span><span class="line"><span class="cl">sudo apt install ./amdgpu-install_5.4.50403-1_all.deb
 </span></span><span class="line"><span class="cl">sudo apt update <span class="o">&amp;&amp;</span> sudo apt upgrade -y
 </span></span><span class="line"><span class="cl">sudo amdgpu-install --usecase<span class="o">=</span>rocm --no-dkms
@@ -68,10 +68,16 @@
 </blockquote>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl"><span class="c1"># https://download.pytorch.org/whl/ -&gt; https://mirror.sjtu.edu.cn/pytorch-wheels/</span>
 </span></span><span class="line"><span class="cl"><span class="c1"># ALL pytorch version https://download.pytorch.org/whl/torch_stable.html or https://mirror.sjtu.edu.cn/pytorch-wheels/torch_stable.html search ROCm</span>
-</span></span><span class="line"><span class="cl">pip config <span class="nb">set</span> global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
-</span></span><span class="line"><span class="cl">python -m pip install -i https://pypi.tuna.tsinghua.edu.cn/simple --upgrade pip wheel
+</span></span><span class="line"><span class="cl"><span class="c1"># Pip的配置文件为用户根目录下的：~/.pip/pip.conf or ~/.config/pip/pip.conf（Windows路径为：C:\Users\&lt;UserName&gt;\pip\pip.ini）</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># https://pypi.tuna.tsinghua.edu.cn/simple</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># http://mirrors.aliyun.com/pypi/simple</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># http://pypi.douban.com/simple</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># https://mirrors.cloud.tencent.com/pypi/simple</span>
+</span></span><span class="line"><span class="cl"><span class="c1"># https://repo.huaweicloud.com/repository/pypi/simple</span>
+</span></span><span class="line"><span class="cl">pip config <span class="nb">set</span> global.index-url https://mirrors.aliyun.com/pypi/simple
+</span></span><span class="line"><span class="cl">python -m pip install --upgrade pip wheel -i https://mirrors.aliyun.com/pypi/simple
 </span></span><span class="line"><span class="cl"><span class="c1">#pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm5.4.2</span>
-</span></span><span class="line"><span class="cl">pip install torch torchvision torchaudio -f https://mirror.sjtu.edu.cn/pytorch-wheels/rocm5.4.2/torch_stable.html
+</span></span><span class="line"><span class="cl">pip install torch torchvision torchaudio -f https://mirror.sjtu.edu.cn/pytorch-wheels/rocm5.4.2/torch_stable.html -i https://mirrors.aliyun.com/pypi/simple
 </span></span><span class="line"><span class="cl">pip list <span class="p">|</span> grep <span class="s1">&#39;torch&#39;</span>
 </span></span><span class="line"><span class="cl"><span class="c1">#pip install torch==2.0.0+rocm5.4.2 torchvision==0.15.1+rocm5.4.2 torchaudio==2.0.1+rocm5.4.2 -f https://mirror.sjtu.edu.cn/pytorch-wheels/rocm5.4.2/torch_stable.html</span>
 </span></span><span class="line"><span class="cl"><span class="c1"># 下面命令可能能会帮你解决依赖问题，也可能不会。</span>
@@ -83,7 +89,14 @@
 <h2 id="下载-stable-diffusion-webui">下载 Stable Diffusion WebUI</h2>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-sh" data-lang="sh"><span class="line"><span class="cl">git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui
 </span></span><span class="line"><span class="cl"><span class="nb">cd</span> stable-diffusion-webui
-</span></span><span class="line"><span class="cl"><span class="c1">#pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#python -m venv venv</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#source venv/bin/activate #Linux</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#pip install virtualenv #Windows</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#.\venv\Scripts\activate #Windows CMD or PS</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#source venv/Scripts/activate #Git Bash</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#python -m pip install --upgrade pip wheel -i https://mirrors.aliyun.com/pypi/simple</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#pip install -r requirements.txt -i https://mirrors.aliyun.com/pypi/simple</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#deactivate</span>
 </span></span></code></pre></div><blockquote>
 <p>从这里开始会下载很多 GitHub 的文件，可能会下载失败，请加速器吧。或者了解 <a href="https://ghproxy.com">https://ghproxy.com</a> 的用法。</p>
 </blockquote>
@@ -93,9 +106,9 @@
 </span></span><span class="line"><span class="cl"><span class="c1">#export HSA_OVERRIDE_GFX_VERSION=8.0.3 # gfx803 Radeon RX580</span>
 </span></span><span class="line"><span class="cl"><span class="c1"># RX5000 系列需要在 COMMANDLINE_ARGS 添加 --precision full --no-half，RX500 和 RX6000 系列不需要</span>
 </span></span><span class="line"><span class="cl"><span class="c1"># --medvram --lowvram --opt-sub-quad-attention --disable-nan-check https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Command-Line-Arguments-and-Settings</span>
-</span></span><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">COMMANDLINE_ARGS</span><span class="o">=</span><span class="s2">&#34;--skip-torch-cuda-test --autolaunch --listen&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">TORCH_COMMAND</span><span class="o">=</span><span class="s2">&#34;pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm5.4.2&#34;</span>
-</span></span><span class="line"><span class="cl"><span class="c1">#export TORCH_COMMAND=&#34;pip install torch torchvision torchaudio -f https://mirror.sjtu.edu.cn/pytorch-wheels/rocm5.4.2/torch_stable.html&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">COMMANDLINE_ARGS</span><span class="o">=</span><span class="s2">&#34;--skip-torch-cuda-test --autolaunch --listen --theme dark&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="c1">#export TORCH_COMMAND=&#34;pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/rocm5.4.2&#34;</span>
+</span></span><span class="line"><span class="cl"><span class="nb">export</span> <span class="nv">TORCH_COMMAND</span><span class="o">=</span><span class="s2">&#34;pip install torch torchvision torchaudio -f https://mirror.sjtu.edu.cn/pytorch-wheels/rocm5.4.2/torch_stable.html -i https://mirrors.aliyun.com/pypi/simple&#34;</span>
 </span></span></code></pre></div><h3 id="下载model">下载Model</h3>
 <ul>
 <li>civitai.com</li>
