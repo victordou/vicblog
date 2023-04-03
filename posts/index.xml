@@ -1208,13 +1208,14 @@ uci commit firewall
 <p>强烈不建议把问题硬盘直接拔下来再插入新盘，因为这种情况下新盘的数据就必须通过全盘读取其他好盘的方式计算出来，这个过程的代价比较高。而如果带着故障硬盘一起恢复，那么故障硬盘里的好数据就能直接导入新盘，而无需根据其他盘的校验值进行反向计算，这大大降低了其他盘在高强度读数据过程中发生损坏的风险。</p>
 </li>
 </ul>
+<hr>
 <p>ZFS 视频1 <a href="https://www.bilibili.com/video/BV18V4y1K7o2/">https://www.bilibili.com/video/BV18V4y1K7o2/</a></p>
 <p>ZFS 文字版1 <a href="https://www.wolai.com/littlenewton/gJvungs54zWgZ3YfoXAvKW">https://www.wolai.com/littlenewton/gJvungs54zWgZ3YfoXAvKW</a></p>
 <p>ZFS 视频2 <a href="https://www.bilibili.com/video/BV1Ad4y1Y7b5/">https://www.bilibili.com/video/BV1Ad4y1Y7b5/</a></p>
 <p>ZFS 文字版2 <a href="https://www.wolai.com/littlenewton/dT2737LXf412LKKZ973DsD">https://www.wolai.com/littlenewton/dT2737LXf412LKKZ973DsD</a></p>
 <p>OpenZFS 基础 <a href="https://www.youtube.com/watch?v=MsY-BafQgj4">https://www.youtube.com/watch?v=MsY-BafQgj4</a></p>
 <p>如何扩展ZFS <a href="https://www.youtube.com/watch?v=11bWnvCwTOU">https://www.youtube.com/watch?v=11bWnvCwTOU</a></p>
-<p>硬件Raid已死 <a href="https://www.youtube.com/watch?v=11bWnvCwTOU">https://www.youtube.com/watch?v=11bWnvCwTOU</a></p>
+<p>硬件Raid已死 <a href="https://www.youtube.com/watch?v=l55GfAwa8RI">https://www.youtube.com/watch?v=l55GfAwa8RI</a></p>
 <p>OpenZFS 硬件推荐 <a href="https://openzfs.github.io/openzfs-docs/erformance%20and%20Tuning/Hardware.html">https://openzfs.github.io/openzfs-docs/erformance%20and%20Tuning/Hardware.html</a></p>
 <p>Debian ZFS 命令行使用教程 <a href="https://pthree.org/2012/04/17/install-zfs-on-debian-gnulinux/">https://pthree.org/2012/04/17/install-zfs-on-debian-gnulinux/</a></p>
 ]]></content></item><item><title>如何正确配置 OpenWrt WPA3 + 802.11kvr</title><link>https://vicfree.com/2022/11/openwrt-wpa3-802.11kvr-ap-setup/</link><pubDate>Thu, 24 Nov 2022 11:50:38 +0800</pubDate><guid>https://vicfree.com/2022/11/openwrt-wpa3-802.11kvr-ap-setup/</guid><description>在优化家里Wi-Fi过程中，发现不管是中文英文，无线漫游、802.11kvr相关的视频帖子要么是简单的复制粘贴，要么夹杂在大量无效信息内，所</description><content type="html"><![CDATA[<p>在优化家里Wi-Fi过程中，发现不管是中文英文，无线漫游、802.11kvr相关的视频帖子要么是简单的复制粘贴，要么夹杂在大量无效信息内，所以今天给大家总结一下我学到的东西。</p>
