@@ -127,7 +127,7 @@ slug: truenas-setup-guide
 
 * 强烈不建议把问题硬盘直接拔下来再插入新盘，因为这种情况下新盘的数据就必须通过全盘读取其他好盘的方式计算出来，这个过程的代价比较高。而如果带着故障硬盘一起恢复，那么故障硬盘里的好数据就能直接导入新盘，而无需根据其他盘的校验值进行反向计算，这大大降低了其他盘在高强度读数据过程中发生损坏的风险。
 
-
+----
 ZFS 视频1 <https://www.bilibili.com/video/BV18V4y1K7o2/>
 
 ZFS 文字版1 <https://www.wolai.com/littlenewton/gJvungs54zWgZ3YfoXAvKW>
@@ -140,7 +140,7 @@ OpenZFS 基础 <https://www.youtube.com/watch?v=MsY-BafQgj4>
 
 如何扩展ZFS <https://www.youtube.com/watch?v=11bWnvCwTOU>
 
-硬件Raid已死 <https://www.youtube.com/watch?v=11bWnvCwTOU>
+硬件Raid已死 <https://www.youtube.com/watch?v=l55GfAwa8RI>
 
 OpenZFS 硬件推荐 <https://openzfs.github.io/openzfs-docs/erformance%20and%20Tuning/Hardware.html>
 
