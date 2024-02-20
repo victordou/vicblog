@@ -36,7 +36,7 @@ slug: stable-diffusion-amd-gpu-rocm-ubuntu
 
 ### RX580
 - 网友说[官方ROCm](https://docs.amd.com/bundle/Hardware_and_Software_Reference_Guide/page/Hardware_and_Software_Support.html)对 RX580 只支持到 Rocm3.7，之后的版本官方不做可用性认证，导致新版本ROCm支持 RX580 有很多bug,但是 ROCm3.7 只支持Python3.6-3.9
-- 幸好网友对官方 ROCm 进行了修改，添加了 RX580 的支持，下面会用到 <https://github.com/XiaozhouTAT/stable-diffusion-webui-use-amd-gpu> 库里的修改版 rocblas, pytorch, torchvision, tensorflow.
+- 幸好网友对官方 ROCm 进行了修改，添加了 RX580 的支持，会用到 <https://github.com/xuhuisheng/rocm-gfx803> 库里的修改版 rocblas, pytorch, torchvision, tensorflow.
 > 请注意这个库使用的是 Ubuntu 20.04 LTS 进行的验证。
 
 ## 安装Python
